@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Log In — Crop Guardian AI</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <style>
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --green: #15803d;
+            --lime: #84cc16;
+            --orange: #f97316;
+            --white: #fafaf7;
+            --dark: #0f1a0f;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--white);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .mesh {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            background: radial-gradient(ellipse 60% 50% at 10% 20%, rgba(21, 128, 61, .08) 0%, transparent 60%), radial-gradient(ellipse 50% 60% at 90% 80%, rgba(249, 115, 22, .06) 0%, transparent 60%), var(--white);
+        }
+
+        .orb {
+            position: fixed;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 1;
+            filter: blur(70px);
+            animation: orb-float ease-in-out infinite alternate;
+        }
+
+        .orb1 {
+            width: 380px;
+            height: 380px;
+            top: -80px;
+            left: -80px;
+            background: radial-gradient(circle, rgba(21, 128, 61, .15), transparent 70%);
+            animation-duration: 10s;
+        }
+
+        .orb2 {
+            width: 300px;
+            height: 300px;
+            bottom: -60px;
+            right: -60px;
+            background: radial-gradient(circle, rgba(249, 115, 22, .12), transparent 70%);
+            animation-duration: 13s;
+            animation-delay: 2s;
+        }
+
+        @keyframes orb-float {
+            from {
+                transform: translate(0, 0);
+            }
+
+            to {
+                transform: translate(25px, 18px);
+            }
+        }
+
+        .top-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--green), var(--lime), var(--orange), #eab308, var(--green));
+            background-size: 300% 100%;
+            animation: bar 5s linear infinite;
+            z-index: 100;
+        }
+
+        @keyframes bar {
+            to {
+                background-position: 300% 0;
+            }
+        }
+
+        .page {
+            width: 100%;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 5rem 1rem 2rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        .card {
+            background: #fff;
+            border-radius: 24px;
+            padding: 2.8rem 2.4rem;
+            width: 100%;
+            max-width: 440px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, .03), 0 24px 60px rgba(0, 0, 0, .09);
+            border: 1px solid rgba(21, 128, 61, .1);
+            position: relative;
+            opacity: 0;
+            transform: translateY(60px);
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            border-radius: 24px 24px 0 0;
+            background: linear-gradient(90deg, var(--green), var(--lime), var(--orange), #eab308, var(--green));
+            background-size: 300% 100%;
+            animation: bar 5s linear infinite;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .header .icon {
+            font-size: 2.8rem;
+            display: block;
+            margin-bottom: .6rem;
+            filter: drop-shadow(0 2px 8px rgba(21, 128, 61, .3));
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-6px);
+            }
+        }
+
+        .header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.9rem;
+            font-weight: 900;
+            color: var(--dark);
+            letter-spacing: -.02em;
+        }
+
+        .header p {
+            font-size: .88rem;
+            color: #999;
+            margin-top: .3rem;
+            font-weight: 300;
+        }
+
+        .steps {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: .5rem;
+            margin-bottom: 2rem;
+            opacity: 0;
+        }
+
+        .step {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: .75rem;
+            font-weight: 700;
+            transition: all .3s;
+        }
+
+        .step.active {
+            background: var(--green);
+            color: #fff;
+            box-shadow: 0 0 0 4px rgba(21, 128, 61, .15);
+        }
+
+        .step.done {
+            background: var(--lime);
+            color: #fff;
+        }
+
+        .step.idle {
+            background: #f0f0f0;
+            color: #bbb;
+        }
+
+        .step-line {
+            width: 50px;
+            height: 2px;
+            background: #e0e0e0;
+            border-radius: 2px;
+            transition: background .3s;
+        }
+
+        .step-line.done {
+            background: var(--lime);
+        }
+
+        .form-step {
+            display: none;
+        }
+
+        .form-step.active {
+            display: block;
+        }
+
+        .field {
+            margin-bottom: 1.2rem;
+        }
+
+        .field label {
+            display: block;
+            font-size: .75rem;
+            font-weight: 600;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: .07em;
+            margin-bottom: .45rem;
+        }
+
+        .field input {
+            width: 100%;
+            padding: .88rem 1rem;
+            border: 1.5px solid #e5e5e5;
+            border-radius: 12px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: .98rem;
+            color: var(--dark);
+            background: #fafafa;
+            outline: none;
+            transition: border-color .2s, box-shadow .2s, background .2s;
+        }
+
+        .field input:focus {
+            border-color: var(--green);
+            box-shadow: 0 0 0 3px rgba(21, 128, 61, .1);
+            background: #fff;
+        }
+
+        .btn {
+            width: 100%;
+            padding: .95rem;
+            border: none;
+            border-radius: 12px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 1rem;
+            font-weight: 700;
+            color: #fff;
+            cursor: pointer;
+            background: linear-gradient(135deg, var(--green), #22c55e, var(--orange));
+            background-size: 200% 200%;
+            animation: btn-grad 4s ease infinite;
+            box-shadow: 0 4px 20px rgba(21, 128, 61, .3);
+            transition: transform .2s, box-shadow .2s;
+            margin-top: .3rem;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 28px rgba(21, 128, 61, .4);
+        }
+
+        @keyframes btn-grad {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        .btn-ghost {
+            background: none;
+            color: var(--green);
+            box-shadow: none;
+            border: 1.5px solid rgba(21, 128, 61, .2);
+            animation: none;
+            font-size: .88rem;
+            padding: .6rem;
+            margin-top: .5rem;
+        }
+
+        .msg {
+            border-radius: 10px;
+            padding: .7rem .9rem;
+            font-size: .85rem;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        .msg.error {
+            background: #fff5f5;
+            border: 1px solid #fecaca;
+            color: #dc2626;
+        }
+
+        .msg.success {
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            color: var(--green);
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 1.4rem;
+            font-size: .88rem;
+            color: #aaa;
+            opacity: 0;
+        }
+
+        .footer a {
+            color: var(--green);
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .nav-back {
+            position: fixed;
+            top: 1.2rem;
+            left: 1.5rem;
+            z-index: 50;
+            color: #888;
+            font-size: .88rem;
+            font-weight: 500;
+            cursor: pointer;
+            text-decoration: none;
+            opacity: 0;
+            transition: color .2s;
+        }
+
+        .leaf {
+            position: fixed;
+            top: -50px;
+            z-index: 999;
+            pointer-events: none;
+            opacity: 0;
+            animation: leaf-fall linear forwards;
+        }
+
+        @keyframes leaf-fall {
+            0% {
+                opacity: 0;
+                transform: translateY(0) rotate(0deg) translateX(0);
+            }
+
+            10% {
+                opacity: 1;
+            }
+
+            100% {
+                opacity: 0;
+                transform: translateY(105vh) rotate(540deg) translateX(var(--d));
+            }
+        }
+
+        .overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 200;
+            background: var(--white);
+            opacity: 0;
+            pointer-events: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="top-bar"></div>
+    <div class="mesh"></div>
+    <div class="orb orb1"></div>
+    <div class="orb orb2"></div>
+    <div class="overlay" id="overlay"></div>
+
+    <a class="nav-back" id="navBack" onclick="goBack()">← Back</a>
+
+    <div class="page">
+        <div class="card" id="card">
+            <div class="header" id="cardHeader">
+                <span class="icon">🌿</span>
+                <h1>Welcome Back</h1>
+                <p>Log in to your guardian account</p>
+            </div>
+
+            <div class="steps" id="steps">
+                <div class="step active" id="s1">1</div>
+                <div class="step-line" id="l1"></div>
+                <div class="step idle" id="s2">2</div>
+            </div>
+
+            <div class="msg error" id="errMsg"></div>
+            <div class="msg success" id="sucMsg"></div>
+
+            <div class="form-step active" id="step1">
+                <div class="field">
+                    <label>Username</label>
+                    <input type="text" id="username" placeholder="e.g. john_farmer">
+                </div>
+                <button class="btn" onclick="goToStep2()">Next →</button>
+            </div>
+
+            <div class="form-step" id="step2">
+                <div class="field">
+                    <label>Password</label>
+                    <input type="password" id="password" placeholder="••••••••">
+                </div>
+                <button class="btn" onclick="verifyLogin()">Log In →</button>
+                <button class="btn btn-ghost" onclick="goToStep1()">Back</button>
+            </div>
+
+            <div class="footer" id="cardFooter">
+                No account? <a onclick="exitTo('signup.html')">Sign Up</a>
+            </div>
+        </div>
+    </div>
+
+    <div id="leaves"></div>
+
+    <script>
+        const tl = gsap.timeline({ delay: .2 });
+        tl.to('#navBack', { opacity: 1, duration: .5 })
+            .to('#card', { opacity: 1, y: 0, duration: .8, ease: 'power4.out' }, '-=.3')
+            .to('#cardHeader', { opacity: 1, y: 0, duration: .6, ease: 'power3.out' }, '-=.4')
+            .to('#steps', { opacity: 1, duration: .5 }, '-=.3')
+            .to('#cardFooter', { opacity: 1, duration: .5 }, '-=.2');
+
+        function showMsg(type, text) {
+            const el = document.getElementById(type === 'error' ? 'errMsg' : 'sucMsg');
+            const hid = document.getElementById(type === 'error' ? 'sucMsg' : 'errMsg');
+            hid.style.display = 'none';
+            el.textContent = text; el.style.display = 'block';
+            setTimeout(() => el.style.display = 'none', 4000);
+        }
+
+        function goToStep2() {
+            const user = document.getElementById('username').value.trim();
+            if (!user) { showMsg('error', 'Please enter your username.'); return; }
+            document.getElementById('step1').classList.remove('active');
+            document.getElementById('step2').classList.add('active');
+            document.getElementById('s1').className = 'step done';
+            document.getElementById('l1').className = 'step-line done';
+            document.getElementById('s2').className = 'step active';
+        }
+
+        function goToStep1() {
+            document.getElementById('step2').classList.remove('active');
+            document.getElementById('step1').classList.add('active');
+            document.getElementById('s1').className = 'step active';
+            document.getElementById('l1').className = 'step-line';
+            document.getElementById('s2').className = 'step idle';
+        }
+
+        function verifyLogin() {
+            const userVal = document.getElementById('username').value.trim();
+            const passVal = document.getElementById('password').value;
+            const users = JSON.parse(localStorage.getItem('cgUsers') || '[]');
+            const account = users.find(u => u.username === userVal && u.password === passVal);
+
+            if (account) {
+                localStorage.setItem('cgLoggedIn', JSON.stringify({ username: account.username, name: account.username, phone: account.phone }));
+                spawnLeaves();
+                document.getElementById('s2').className = 'step done';
+                setTimeout(() => exitTo('dashboard.html'), 1500);
+            } else {
+                showMsg('error', 'Invalid username or password.');
+            }
+        }
+
+        function spawnLeaves() {
+            const lc = document.getElementById('leaves');
+            for (let i = 0; i < 25; i++) {
+                setTimeout(() => {
+                    const el = document.createElement('div'); el.className = 'leaf';
+                    el.textContent = ['🍃', '🌿', '🍀', '🌱'][Math.floor(Math.random() * 4)];
+                    const dur = 2.5 + Math.random() * 2;
+                    el.style.cssText = `left:${Math.random() * 100}vw;font-size:${1 + Math.random()}rem;--d:${(Math.random() - .5) * 220}px;animation-duration:${dur}s;`;
+                    lc.appendChild(el); setTimeout(() => el.remove(), (dur + 1) * 1000);
+                }, i * 55);
+            }
+        }
+
+        function exitTo(url) {
+            gsap.to('#overlay', { opacity: 1, duration: .3, onComplete: () => window.location.href = url });
+        }
+
+        function goBack() { exitTo('index.html'); }
+    </script>
+</body>
+
+</html>

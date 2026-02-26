@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard — Crop Guardian AI</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;600;900&display=swap"
+        rel="stylesheet">
+    <style>
+        /* Language selector */
+        .lang-selector {
+            padding: .4rem .8rem;
+            border: 1px solid rgba(21, 128, 61, .2);
+            border-radius: 8px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: .85rem;
+            color: #0f1a0f;
+            background: rgba(255, 255, 255, .8);
+            backdrop-filter: blur(4px);
+            outline: none;
+            cursor: pointer;
+            transition: all .2s;
+            margin-right: 1rem;
+        }
+
+        .lang-selector:hover {
+            border-color: #15803d;
+            box-shadow: 0 2px 8px rgba(21, 128, 61, .1);
+        }
+    </style>
+</head>
+
+<body class="dashboard-page">
+
+    <div class="grain"></div>
+    <canvas id="particles" style="position:fixed;inset:0;z-index:0;pointer-events:none;"></canvas>
+
+    <!-- Animated gradient header -->
+    <header class="dash-header">
+        <div class="dash-logo-area">
+            <div class="icon">🌿</div>
+            <h1 class="glitch" data-text="CROP GUARDIAN AI">CROP GUARDIAN AI</h1>
+        </div>
+    </header>
+
+    <!-- Sticky nav -->
+    <nav class="dash-nav">
+        <span class="nav-brand">🌾 CropGuardian</span>
+        <ul class="nav-links">
+            <li><a href="#">Dashboard</a></li>
+            <li><a href="#">Fields</a></li>
+            <li><a href="#">Analytics</a></li>
+            <li><a href="#">AI Insights</a></li>
+        </ul>
+        <div class="nav-user" style="display:flex; align-items:center;">
+            <select class="lang-selector">
+                <option value="en">English</option>
+                <option value="hi">हिंदी</option>
+                <option value="te">తెలుగు</option>
+                <option value="mr">మराठी</option>
+            </select>
+            <div class="nav-avatar" id="userAvatar">?</div>
+            <a href="index.html" class="logout-btn" onclick="logout(); return false;">Log Out</a>
+        </div>
+    </nav>
+
+    <!-- Dashboard body -->
+    <main class="dash-body" style="position:relative;z-index:2;">
+
+        <!-- Welcome banner -->
+        <div
+            style="margin-bottom:2rem;padding:1.5rem 2rem;background:linear-gradient(135deg,#f0fdf4,#fff7ed);border:1px solid #bbf7d0;border-radius:16px;">
+            <h2 style="font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:.04em;color:#1a1a1a;"
+                id="welcomeMsg">Welcome back! 🌿</h2>
+            <p style="color:#888;font-size:.9rem;margin-top:.3rem;">Here's your farm intelligence overview for today.
+            </p>
+        </div>
+
+        <!-- Stats -->
+        <h2 class="section-title">Live Farm Statistics</h2>
+        <div class="stats-grid">
+            <div class="stat-card green">
+                <div class="stat-icon">🌱</div>
+                <div class="stat-value" style="color:#22c55e">94%</div>
+                <div class="stat-label">Crop Health Score</div>
+            </div>
+            <div class="stat-card orange">
+                <div class="stat-icon">💧</div>
+                <div class="stat-value" style="color:#fb923c">72%</div>
+                <div class="stat-label">Soil Moisture</div>
+            </div>
+            <div class="stat-card yellow">
+                <div class="stat-icon">☀️</div>
+                <div class="stat-value" style="color:#eab308">38°C</div>
+                <div class="stat-label">Field Temperature</div>
+            </div>
+            <div class="stat-card blue">
+                <div class="stat-icon">🏞️</div>
+                <div class="stat-value" style="color:#38bdf8">12</div>
+                <div class="stat-label">Active Fields</div>
+            </div>
+        </div>
+
+        <!-- Features -->
+        <h2 class="section-title">AI Features</h2>
+        <div class="features-grid">
+
+            <div class="feature-card">
+                <div class="feature-icon">🤖</div>
+                <h3>AI Crop Diagnosis</h3>
+                <p>Upload a photo of your crop and our AI instantly detects diseases, nutrient deficiencies, and pest
+                    infestations with 98% accuracy.</p>
+                <span class="feature-tag tag-green">Active</span>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">🌦️</div>
+                <h3>Precision Weather Sync</h3>
+                <p>Hyper-local 7-day weather forecasts integrated with your field GPS coordinates for irrigation and
+                    planting
+                    decisions.</p>
+                <span class="feature-tag tag-orange">Live</span>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">📊</div>
+                <h3>Yield Prediction Engine</h3>
+                <p>Machine learning models trained on 50M+ harvest records predict your seasonal yield with real-time
+                    adjustments.</p>
+                <span class="feature-tag tag-yellow">Beta</span>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">🛰️</div>
+                <h3>Satellite Field Mapping</h3>
+                <p>NDVI satellite imagery updated every 5 days shows vegetation health, stress zones, and growth
+                    patterns across
+                    all fields.</p>
+                <span class="feature-tag tag-green">Active</span>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">💊</div>
+                <h3>Smart Pesticide Advisor</h3>
+                <p>AI-recommended pesticide dosage and scheduling based on current pest pressure, crop stage, and local
+                    resistance patterns.</p>
+                <span class="feature-tag tag-orange">Active</span>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">💰</div>
+                <h3>Market Price Intelligence</h3>
+                <p>Real-time commodity prices, harvest timing optimizer, and contract farming opportunities tailored to
+                    your
+                    crop portfolio.</p>
+                <span class="feature-tag tag-yellow">Active</span>
+            </div>
+
+        </div>
+
+        <!-- Holographic info card -->
+        <div style="margin-top:3rem;text-align:center;">
+            <div class="card" style="display:inline-block;">
+                <h2>Precision Agriculture Platform</h2>
+                <p>Combining satellite intelligence, AI diagnostics, and real-time field data to transform how you farm.
+                </p>
+                <a class="btn btn-primary" href="#" style="width:auto;display:inline-block;margin-top:1.5rem;">EXPLORE
+                    AI
+                    TOOLS</a>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        // Auth guard
+        const user = JSON.parse(localStorage.getItem('cgLoggedIn') || 'null');
+        if (!user) window.location.href = 'login.html';
+
+        // Set user info
+        if (user) {
+            const name = user.name || user.username || 'Farmer';
+            document.getElementById('welcomeMsg').textContent = `Welcome back, ${name}! 🌿`;
+            document.getElementById('userAvatar').textContent = name.charAt(0).toUpperCase();
+        }
+
+        function logout() {
+            localStorage.removeItem('cgLoggedIn');
+            window.location.href = 'index.html';
+        }
+
+        // Particles
+        const canvas = document.getElementById('particles');
+        const ctx = canvas.getContext('2d');
+        canvas.width = innerWidth; canvas.height = innerHeight;
+        window.addEventListener('resize', () => { canvas.width = innerWidth; canvas.height = innerHeight; });
+        const pts = Array.from({ length: 50 }, () => ({
+            x: Math.random() * canvas.width, y: Math.random() * canvas.height,
+            r: Math.random() * 2 + .5, dx: (Math.random() - .5) * .25, dy: (Math.random() - .5) * .25,
+            op: Math.random() * .3 + .05,
+            c: ['rgba(34,197,94,', 'rgba(249,115,22,', 'rgba(168,224,99,', 'rgba(234,179,8,'][Math.floor(Math.random() * 4)]
+        }));
+        (function loop() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            pts.forEach(p => {
+                ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+                ctx.fillStyle = p.c + p.op + ')'; ctx.fill();
+                p.x += p.dx; p.y += p.dy;
+                if (p.x < 0 || p.x > canvas.width) p.dx *= -1;
+                if (p.y < 0 || p.y > canvas.height) p.dy *= -1;
+            });
+            requestAnimationFrame(loop);
+        })();
+
+        // Scroll entrance animations for cards
+        const cards = document.querySelectorAll('.stat-card, .feature-card');
+        const io = new IntersectionObserver(entries => {
+            entries.forEach((e, i) => {
+                if (e.isIntersecting) {
+                    e.target.style.animation = `fadeUp .6s ease ${i * 0.1}s both`;
+                }
+            });
+        }, { threshold: .1 });
+        cards.forEach(c => io.observe(c));
+    </script>
+
+</body>
+
+</html>

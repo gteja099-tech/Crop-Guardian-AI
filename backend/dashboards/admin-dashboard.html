@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard — CropGuardianAI</title>
+    <link rel="stylesheet" href="../css/dashboard.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+    <div class="top-bar"></div>
+    <div class="pg-overlay" id="pgOverlay"></div>
+    <div class="toast-stack" id="toastStack"></div>
+
+    <aside class="sidebar" id="sidebar">
+        <a href="../index.html" class="sidebar-logo">
+            <span class="sl-icon">🌿</span><span class="sl-text">CropGuardian<em>AI</em></span>
+        </a>
+        <div class="sidebar-user">
+            <div class="su-name" id="sbName">CG Administrator</div>
+            <div class="su-email" id="sbEmail">admin@cropguardian.ai</div>
+            <div><span class="su-badge admin">👑 Admin</span></div>
+            <div style="font-size:.7rem;color:rgba(255,255,255,.3);margin-top:.2rem">ID: ADM-0001</div>
+        </div>
+        <nav class="sidebar-nav">
+            <div class="nav-section-label">System</div>
+            <a class="nav-item active" onclick="showSection('overview')"><span class="nav-icon">🖥️</span> System
+                Overview</a>
+            <a class="nav-item" onclick="showSection('users')"><span class="nav-icon">👥</span> User Management</a>
+            <a class="nav-item" onclick="showSection('units')"><span class="nav-icon">🏭</span> Storage Units</a>
+            <div class="nav-section-label">Intelligence</div>
+            <a class="nav-item" onclick="showSection('ml')"><span class="nav-icon">🤖</span> ML Service Monitor</a>
+            <a class="nav-item" onclick="showSection('logs')"><span class="nav-icon">📋</span> Audit Logs</a>
+            <div class="nav-section-label">Finance</div>
+            <a class="nav-item" onclick="showSection('billing')"><span class="nav-icon">💰</span> Billing & Revenue</a>
+        </nav>
+        <div class="sidebar-footer">
+            <button class="btn-logout" onclick="logout()">⬅ Sign Out</button>
+        </div>
+    </aside>
+
+    <main class="main">
+        <div class="topbar">
+            <div class="topbar-title" id="topbarTitle">System Overview</div>
+            <div style="display:flex;align-items:center;gap:.5rem;font-size:.78rem;color:#22c55e;font-weight:700"><span
+                    style="animation:dot-pulse 2s ease-in-out infinite;display:inline-block;width:8px;height:8px;background:#22c55e;border-radius:50%"></span>All
+                Systems Operational</div>
+            <div class="topbar-time" id="topbarTime"></div>
+            <div class="avatar-btn" style="background:linear-gradient(135deg,var(--gold),#d4a017)">A</div>
+        </div>
+
+        <div class="page-content">
+
+            <!-- ══ SYSTEM OVERVIEW ══ -->
+            <div id="sec-overview">
+                <div class="page-header">
+                    <h1>System Overview</h1>
+                    <p>Real-time platform health and performance</p>
+                </div>
+                <div class="kpi-grid">
+                    <div class="kpi-card" style="--kpi-color:#22c55e">
+                        <div class="kpi-icon">👥</div>
+                        <div class="kpi-label">Total Users</div>
+                        <div class="kpi-value">247</div>
+                        <div class="kpi-unit">Active accounts</div>
+                        <div class="kpi-delta up">↑ +12 this month</div>
+                    </div>
+                    <div class="kpi-card" style="--kpi-color:#3b82f6">
+                        <div class="kpi-icon">🏭</div>
+                        <div class="kpi-label">Storage Units</div>
+                        <div class="kpi-value">4</div>
+                        <div class="kpi-unit">Monitored facilities</div>
+                        <div class="kpi-delta up">100% operational</div>
+                    </div>
+                    <div class="kpi-card" style="--kpi-color:#c9a84c">
+                        <div class="kpi-icon">📡</div>
+                        <div class="kpi-label">Active Sensors</div>
+                        <div class="kpi-value">48/50</div>
+                        <div class="kpi-unit">Online right now</div>
+                        <div class="kpi-delta warn">⚠ 2 offline</div>
+                    </div>
+                    <div class="kpi-card" style="--kpi-color:#22c55e">
+                        <div class="kpi-icon">🤖</div>
+                        <div class="kpi-label">ML Predictions</div>
+                        <div class="kpi-value">1,842</div>
+                        <div class="kpi-unit">Made this month</div>
+                        <div class="kpi-delta up">98.1% accuracy</div>
+                    </div>
+                </div>
+
+                <!-- System health -->
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem">
+                    <div class="section-card">
+                        <div class="card-header">
+                            <div class="card-title">🖥️ System Health</div>
+                        </div>
+                        <div class="card-body" style="display:flex;flex-direction:column;gap:1rem">
+                            <div style="display:flex;justify-content:space-between;align-items:center">
+                                <span style="font-size:.88rem;font-weight:600">Node.js Backend</span>
+                                <span class="badge badge-online">● Online · 99.9%</span>
+                            </div>
+                            <div style="display:flex;justify-content:space-between;align-items:center">
+                                <span style="font-size:.88rem;font-weight:600">MongoDB Atlas</span>
+                                <span class="badge badge-online">● Connected</span>
+                            </div>
+                            <div style="display:flex;justify-content:space-between;align-items:center">
+                                <span style="font-size:.88rem;font-weight:600">ML FastAPI Service</span>
+                                <span class="badge badge-online">● Online · 187ms avg</span>
+                            </div>
+                            <div style="display:flex;justify-content:space-between;align-items:center">
+                                <span style="font-size:.88rem;font-weight:600">WebSocket Server</span>
+                                <span class="badge badge-online">● 24 active connections</span>
+                            </div>
+                            <div style="display:flex;justify-content:space-between;align-items:center">
+                                <span style="font-size:.88rem;font-weight:600">Twilio SMS/WA/Voice</span>
+                                <span class="badge badge-online">● Operational</span>
+                            </div>
+                            <div style="display:flex;justify-content:space-between;align-items:center">
+                                <span style="font-size:.88rem;font-weight:600">Sensor Network (IoT)</span>
+                                <span class="badge badge-warn">⚠ 48/50 Active</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="section-card">
+                        <div class="card-header">
+                            <div class="card-title">📈 Platform Activity</div>
+                        </div>
+                        <div class="card-body"><canvas id="activityChart" height="200"></canvas></div>
+                    </div>
+                </div>
+
+                <!-- Pending approvals -->
+                <div class="section-card" style="margin-top:1.5rem">
+                    <div class="card-header">
+                        <div class="card-title">⏳ Pending Approvals</div><span class="badge badge-risk-med">3
+                            pending</span>
+                    </div>
+                    <div class="card-body" style="overflow-x:auto">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Role</th>
+                                    <th>Email</th>
+                                    <th>Applied</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="cell-name">Anand Kumar</td>
+                                    <td><span class="badge badge-blue">Employee</span></td>
+                                    <td>anand@demo.com</td>
+                                    <td>Feb 24, 2026</td>
+                                    <td><button class="btn-sm solid" onclick="approveUser(this,'Anand Kumar')">✓
+                                            Approve</button> <button class="btn-sm danger"
+                                            onclick="denyUser(this,'Anand Kumar')">✗ Deny</button></td>
+                                </tr>
+                                <tr>
+                                    <td class="cell-name">Priya Sharma</td>
+                                    <td><span class="badge badge-purple">Manager</span></td>
+                                    <td>priya@demo.com</td>
+                                    <td>Feb 23, 2026</td>
+                                    <td><button class="btn-sm solid" onclick="approveUser(this,'Priya Sharma')">✓
+                                            Approve</button> <button class="btn-sm danger"
+                                            onclick="denyUser(this,'Priya Sharma')">✗ Deny</button></td>
+                                </tr>
+                                <tr>
+                                    <td class="cell-name">Suresh Nair</td>
+                                    <td><span class="badge badge-blue">Employee</span></td>
+                                    <td>suresh.n@demo.com</td>
+                                    <td>Feb 20, 2026</td>
+                                    <td><button class="btn-sm solid" onclick="approveUser(this,'Suresh Nair')">✓
+                                            Approve</button> <button class="btn-sm danger"
+                                            onclick="denyUser(this,'Suresh Nair')">✗ Deny</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ══ USERS ══ -->
+            <div id="sec-users" style="display:none">
+                <div class="page-header">
+                    <h1>User Management</h1>
+                    <p>Manage all accounts across all roles</p>
+                </div>
+                <div style="display:flex;gap:.6rem;margin-bottom:1rem;flex-wrap:wrap">
+                    <button class="btn-sm active solid" onclick="filterUsers('all',this)">All (247)</button>
+                    <button class="btn-sm" onclick="filterUsers('farmer',this)">🌾 Farmers (198)</button>
+                    <button class="btn-sm" onclick="filterUsers('employee',this)">👨‍💻 Employees (28)</button>
+                    <button class="btn-sm" onclick="filterUsers('manager',this)">👔 Managers (18)</button>
+                    <button class="btn-sm" onclick="filterUsers('admin',this)">👑 Admins (3)</button>
+                </div>
+                <div class="section-card">
+                    <div class="card-body" style="overflow-x:auto">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Role</th>
+                                    <th>Unit</th>
+                                    <th>Status</th>
+                                    <th>Joined</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="allUsersTable"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ══ STORAGE UNITS ══ -->
+            <div id="sec-units" style="display:none">
+                <div class="page-header">
+                    <h1>Storage Unit Configuration</h1>
+                </div>
+                <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1rem">
+                    <div class="section-card">
+                        <div class="card-header">
+                            <div class="card-title">Unit 1 · Tadepalligudam</div><span
+                                class="badge badge-active">Optimal</span>
+                        </div>
+                        <div class="card-body">
+                            <div style="display:flex;flex-direction:column;gap:.6rem;font-size:.86rem">
+                                <div style="display:flex;justify-content:space-between"><span
+                                        style="color:var(--text-3)">Temperature</span><strong>4.2°C</strong></div>
+                                <div style="display:flex;justify-content:space-between"><span
+                                        style="color:var(--text-3)">Humidity</span><strong>87%</strong></div>
+                                <div style="display:flex;justify-content:space-between"><span
+                                        style="color:var(--text-3)">Capacity</span><strong>72%</strong></div>
+                                <div style="display:flex;justify-content:space-between"><span
+                                        style="color:var(--text-3)">Sensors</span><strong>12/12</strong></div>
+                                <div style="display:flex;justify-content:space-between"><span
+                                        style="color:var(--text-3)">Manager</span><strong>Sujata Rao</strong></div>
+                            </div><button class="btn-sm" style="margin-top:1rem;width:100%"
+                                onclick="showToast('success','Unit 1 settings updated.')">Edit Settings</button>
+                        </div>
+                    </div>
+                    <div class="section-card">
+                        <div class="card-header">
+                            <div class="card-title">Unit 2 · Tadepalligudam</div><span
+                                class="badge badge-risk-high">High Risk</span>
+                        </div>
+                        <div class="card-body">
+                            <div style="display:flex;flex-direction:column;gap:.6rem;font-size:.86rem">
+                                <div style="display:flex;justify-content:space-between"><span
+                                        style="color:var(--text-3)">Temperature</span><strong
+                                        style="color:#ef4444">6.8°C ⚠</strong></div>
+                                <div style="display:flex;justify-content:space-between"><span
+                                        style="color:var(--text-3)">Humidity</span><strong style="color:#ef4444">94%
+                                        🚨</strong></div>
+                                <div style="display:flex;justify-content:space-between"><span
+                                        style="color:var(--text-3)">Capacity</span><strong>85%</strong></div>
+                                <div style="display:flex;justify-content:space-between"><span
+                                        style="color:var(--text-3)">Sensors</span><strong>11/12 ⚠</strong></div>
+                                <div style="display:flex;justify-content:space-between"><span
+                                        style="color:var(--text-3)">Manager</span><strong>Sujata Rao</strong></div>
+                            </div><button class="btn-sm solid" style="margin-top:1rem;width:100%"
+                                onclick="showToast('warn','Maintenance alert sent to Unit 2 team.')">🔧 Emergency
+                                Alert</button>
+                        </div>
+                    </div>
+                    <div class="section-card">
+                        <div class="card-header">
+                            <div class="card-title">Unit 3 · Vijayawada</div><span
+                                class="badge badge-risk-med">Medium</span>
+                        </div>
+                        <div class="card-body">
+                            <div style="display:flex;flex-direction:column;gap:.6rem;font-size:.86rem">
+                                <div style="display:flex;justify-content:space-between"><span
+                                        style="color:var(--text-3)">Temperature</span><strong>5.1°C</strong></div>
+                                <div style="display:flex;justify-content:space-between"><span
+                                        style="color:var(--text-3)">Humidity</span><strong>85%</strong></div>
+                                <div style="display:flex;justify-content:space-between"><span
+                                        style="color:var(--text-3)">Capacity</span><strong>55%</strong></div>
+                                <div style="display:flex;justify-content:space-between"><span
+                                        style="color:var(--text-3)">Sensors</span><strong>12/12</strong></div>
+                                <div style="display:flex;justify-content:space-between"><span
+                                        style="color:var(--text-3)">Manager</span><strong>Venu Gopal</strong></div>
+                            </div><button class="btn-sm" style="margin-top:1rem;width:100%">Edit Settings</button>
+                        </div>
+                    </div>
+                    <div class="section-card">
+                        <div class="card-header">
+                            <div class="card-title">Unit 4 · Guntur</div><span class="badge badge-active">Optimal</span>
+                        </div>
+                        <div class="card-body">
+                            <div style="display:flex;flex-direction:column;gap:.6rem;font-size:.86rem">
+                                <div style="display:flex;justify-content:space-between"><span
+                                        style="color:var(--text-3)">Temperature</span><strong>4.5°C</strong></div>
+                                <div style="display:flex;justify-content:space-between"><span
+                                        style="color:var(--text-3)">Humidity</span><strong>83%</strong></div>
+                                <div style="display:flex;justify-content:space-between"><span
+                                        style="color:var(--text-3)">Capacity</span><strong>40%</strong></div>
+                                <div style="display:flex;justify-content:space-between"><span
+                                        style="color:var(--text-3)">Sensors</span><strong>12/12</strong></div>
+                                <div style="display:flex;justify-content:space-between"><span
+                                        style="color:var(--text-3)">Manager</span><strong>Srinivas M</strong></div>
+                            </div><button class="btn-sm" style="margin-top:1rem;width:100%">Edit Settings</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ══ ML SERVICE ══ -->
+            <div id="sec-ml" style="display:none">
+                <div class="page-header">
+                    <h1>ML Service Monitor</h1>
+                    <p>Python FastAPI microservice status and metrics</p>
+                </div>
+                <div class="kpi-grid">
+                    <div class="kpi-card" style="--kpi-color:#22c55e">
+                        <div class="kpi-icon">🟢</div>
+                        <div class="kpi-label">Service Status</div>
+                        <div class="kpi-value" style="font-size:1.2rem">Online</div>
+                        <div class="kpi-unit">FastAPI · Port 8000</div>
+                    </div>
+                    <div class="kpi-card" style="--kpi-color:#3b82f6">
+                        <div class="kpi-icon">⚡</div>
+                        <div class="kpi-label">Avg Response Time</div>
+                        <div class="kpi-value">187ms</div>
+                        <div class="kpi-unit">p95: 340ms</div>
+                    </div>
+                    <div class="kpi-card" style="--kpi-color:#22c55e">
+                        <div class="kpi-icon">📊</div>
+                        <div class="kpi-label">Predictions Today</div>
+                        <div class="kpi-value">284</div>
+                        <div class="kpi-unit">POST /predict calls</div>
+                    </div>
+                    <div class="kpi-card" style="--kpi-color:#c9a84c">
+                        <div class="kpi-icon">🎯</div>
+                        <div class="kpi-label">Accuracy Rate</div>
+                        <div class="kpi-value">98.1%</div>
+                        <div class="kpi-unit">Against actuals</div>
+                    </div>
+                </div>
+                <div class="section-card">
+                    <div class="card-header">
+                        <div class="card-title">ML Models Loaded</div>
+                    </div>
+                    <div class="card-body" style="overflow-x:auto">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Model</th>
+                                    <th>Algorithm</th>
+                                    <th>Accuracy</th>
+                                    <th>Last Trained</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="cell-name">Shelf Life Predictor</td>
+                                    <td>Linear Regression</td>
+                                    <td>96.4%</td>
+                                    <td>Feb 20, 2026</td>
+                                    <td><span class="badge badge-active">Active</span></td>
+                                </tr>
+                                <tr>
+                                    <td class="cell-name">Anomaly Detector</td>
+                                    <td>Isolation Forest</td>
+                                    <td>94.2% F1</td>
+                                    <td>Feb 18, 2026</td>
+                                    <td><span class="badge badge-active">Active</span></td>
+                                </tr>
+                                <tr>
+                                    <td class="cell-name">Risk Classifier</td>
+                                    <td>Random Forest</td>
+                                    <td>98.1%</td>
+                                    <td>Feb 22, 2026</td>
+                                    <td><span class="badge badge-active">Active</span></td>
+                                </tr>
+                                <tr>
+                                    <td class="cell-name">Energy Optimizer</td>
+                                    <td>Support Vector Reg.</td>
+                                    <td>92.7%</td>
+                                    <td>Feb 15, 2026</td>
+                                    <td><span class="badge badge-active">Active</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ══ AUDIT LOGS ══ -->
+            <div id="sec-logs" style="display:none">
+                <div class="page-header">
+                    <h1>Audit Logs</h1>
+                    <p>Complete system activity trail</p>
+                </div>
+                <div class="section-card">
+                    <div class="card-body" style="overflow-x:auto">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Time</th>
+                                    <th>User</th>
+                                    <th>Role</th>
+                                    <th>Action</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="logTable"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ══ BILLING ══ -->
+            <div id="sec-billing" style="display:none">
+                <div class="page-header">
+                    <h1>Billing & Revenue</h1>
+                </div>
+                <div class="kpi-grid">
+                    <div class="kpi-card" style="--kpi-color:#22c55e">
+                        <div class="kpi-icon">💰</div>
+                        <div class="kpi-label">This Month Revenue</div>
+                        <div class="kpi-value">₹8.4L</div>
+                        <div class="kpi-delta up">↑ +18% MoM</div>
+                    </div>
+                    <div class="kpi-card" style="--kpi-color:#3b82f6">
+                        <div class="kpi-icon">📅</div>
+                        <div class="kpi-label">YTD Revenue</div>
+                        <div class="kpi-value">₹68.2L</div>
+                        <div class="kpi-delta up">↑ +24% YoY</div>
+                    </div>
+                    <div class="kpi-card" style="--kpi-color:#c9a84c">
+                        <div class="kpi-icon">🧾</div>
+                        <div class="kpi-label">Outstanding Dues</div>
+                        <div class="kpi-value">₹1.2L</div>
+                        <div class="kpi-delta warn">⚠ 8 invoices pending</div>
+                    </div>
+                    <div class="kpi-card" style="--kpi-color:#22c55e">
+                        <div class="kpi-icon">👨‍🌾</div>
+                        <div class="kpi-label">Paying Farmers</div>
+                        <div class="kpi-value">183</div>
+                        <div class="kpi-delta up">74% of total</div>
+                    </div>
+                </div>
+                <div class="section-card">
+                    <div class="card-header">
+                        <div class="card-title">Revenue by Unit</div>
+                    </div>
+                    <div class="card-body"><canvas id="billingChart" height="120"></canvas></div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script src="../js/transitions.js"></script>
+    <script src="../js/auth.js"></script>
+    <script>
+        const user = JSON.parse(localStorage.getItem('cgUser') || '{"fullName":"CG Administrator","email":"admin@cropguardian.ai","role":"admin"}');
+        document.getElementById('sbName').textContent = user.fullName;
+        document.getElementById('sbEmail').textContent = user.email;
+
+        function tick() { document.getElementById('topbarTime').textContent = new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', second: '2-digit' }); }
+        tick(); setInterval(tick, 1000);
+
+        const secs = ['overview', 'users', 'units', 'ml', 'logs', 'billing'];
+        function showSection(id) {
+            secs.forEach(s => { const el = document.getElementById('sec-' + s); if (el) el.style.display = s === id ? 'block' : 'none'; });
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            event.currentTarget?.classList.add('active');
+            const t = { overview: 'System Overview', users: 'User Management', units: 'Storage Units', ml: 'ML Service Monitor', logs: 'Audit Logs', billing: 'Billing & Revenue' };
+            document.getElementById('topbarTitle').textContent = t[id];
+            if (id === 'users') renderUsers();
+            if (id === 'logs') renderLogs();
+            if (id === 'billing') buildBillingChart();
+        }
+        window.showSection = showSection;
+
+        // Activity chart
+        const ctx = document.getElementById('activityChart')?.getContext('2d');
+        if (ctx) new Chart(ctx, { type: 'line', data: { labels: Array.from({ length: 24 }, (_, i) => `${String(i).padStart(2, '0')}:00`), datasets: [{ label: 'API Calls', data: Array.from({ length: 24 }, () => Math.floor(40 + Math.random() * 180)), borderColor: '#1a6b3a', backgroundColor: 'rgba(26,107,58,.08)', borderWidth: 2, fill: true, tension: .4, pointRadius: 0 }] }, options: { responsive: true, plugins: { legend: { display: false } } } });
+
+        // Users
+        const allUsers = [
+            { name: 'Ravi Shankar', email: 'ravi@demo.com', role: 'farmer', unit: 'Unit 1', status: 'active', joined: 'Jan 10' },
+            { name: 'Venkat Reddy', email: 'venkat@demo.com', role: 'employee', unit: 'Unit 1', status: 'active', joined: 'Jan 15' },
+            { name: 'Sujata Rao', email: 'sujata@demo.com', role: 'manager', unit: 'All', status: 'active', joined: 'Dec 01' },
+            { name: 'Krishna Murthy', email: 'krishna@demo.com', role: 'farmer', unit: 'Unit 2', status: 'active', joined: 'Jan 20' },
+            { name: 'Padmavathi V', email: 'padma@demo.com', role: 'employee', unit: 'Unit 2', status: 'active', joined: 'Feb 01' },
+            { name: 'Lakshmi Devi', email: 'lakshmi@demo.com', role: 'farmer', unit: 'Unit 1', status: 'active', joined: 'Feb 05' },
+        ];
+        function renderUsers() {
+            const el = document.getElementById('allUsersTable'); if (!el) return;
+            const roleBadge = { farmer: 'badge-active', employee: 'badge-blue', manager: 'badge-purple', admin: 'badge-risk-med' };
+            el.innerHTML = allUsers.map(u => `<tr>
+        <td class="cell-name">${u.name}</td><td>${u.email}</td>
+        <td><span class="badge ${roleBadge[u.role]}">${u.role}</span></td>
+        <td>${u.unit}</td>
+        <td><span class="badge badge-active">${u.status}</span></td>
+        <td>${u.joined}</td>
+        <td><button class="btn-sm danger" onclick="deactivate(this,'${u.name}')">Deactivate</button></td>
+      </tr>`).join('');
+        }
+        function deactivate(btn, name) { btn.textContent = 'Deactivated'; btn.disabled = true; showToast('success', `${name} deactivated.`); }
+        window.deactivate = deactivate;
+        function filterUsers(role, btn) { document.querySelectorAll('.btn-sm.active').forEach(b => b.classList.remove('active', 'solid')); btn.classList.add('active', 'solid'); renderUsers(); }
+        window.filterUsers = filterUsers;
+
+        // Audit logs
+        const logs = [
+            { time: '18:45:12', 'user': 'Venkat Reddy', role: 'Employee', action: 'Sensor humidity updated — Unit 2: 87→94%', status: 'logged' },
+            { time: '18:14:32', 'user': 'System', role: 'ML Service', action: 'Spoilage risk prediction: Tomato B4 → 78%', status: 'success' },
+            { time: '17:58:11', 'user': 'Ravi Shankar', role: 'Farmer', action: 'Viewed AI predictions dashboard', status: 'success' },
+            { time: '17:30:00', 'user': 'Sujata Rao', role: 'Manager', action: 'Approved employee: Suresh Kumar', status: 'success' },
+            { time: '16:55:42', 'user': 'System', role: 'Alert Service', action: 'SMS sent to 8 farmers — Unit 2 humidity alert', status: 'success' },
+            { time: '15:30:18', 'user': 'Padmavathi V', role: 'Employee', action: 'Added new farmer: Anand Kumar', status: 'success' },
+        ];
+        function renderLogs() {
+            const el = document.getElementById('logTable'); if (!el) return;
+            el.innerHTML = logs.map(l => `<tr><td style="font-family:monospace;font-size:.78rem">${l.time}</td><td class="cell-name">${l.user}</td><td><span class="badge badge-blue">${l.role}</span></td><td>${l.action}</td><td><span class="badge badge-active">${l.status}</span></td></tr>`).join('');
+        }
+
+        function buildBillingChart() {
+            const ctx = document.getElementById('billingChart')?.getContext('2d');
+            if (!ctx) return;
+            new Chart(ctx, { type: 'bar', data: { labels: ['Unit 1', 'Unit 2', 'Unit 3', 'Unit 4'], datasets: [{ label: 'Revenue ₹', data: [320000, 280000, 150000, 90000], backgroundColor: ['#1a6b3a', '#22c55e', '#c9a84c', '#3b82f6'], borderRadius: 8 }] }, options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { ticks: { callback: v => '₹' + v.toLocaleString() } } } } });
+        }
+
+        function approveUser(btn, name) { btn.closest('tr').remove(); showToast('success', `✓ ${name} approved successfully.`); }
+        function denyUser(btn, name) { btn.closest('tr').remove(); showToast('error', `✗ ${name}'s request has been denied.`); }
+        window.approveUser = approveUser; window.denyUser = denyUser;
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register — CropGuardianAI</title>
+    <meta name="description" content="Choose your role to register on CropGuardianAI">
+    <link rel="stylesheet" href="../css/auth.css">
+    <style>
+        body {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 3rem 1.5rem;
+            background: var(--off-white);
+        }
+
+        .rs-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .rs-logo {
+            display: inline-flex;
+            align-items: center;
+            gap: .6rem;
+            text-decoration: none;
+            margin-bottom: 1.8rem;
+        }
+
+        .rs-logo-text {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 900;
+            color: var(--charcoal);
+        }
+
+        .rs-logo-text em {
+            color: var(--green);
+            font-style: italic;
+        }
+
+        .rs-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            font-weight: 900;
+            color: var(--charcoal);
+            margin-bottom: .6rem;
+            letter-spacing: -.025em;
+        }
+
+        .rs-sub {
+            font-size: .95rem;
+            color: var(--text-3);
+        }
+
+        .role-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.2rem;
+            max-width: 900px;
+            width: 100%;
+        }
+
+        .role-option {
+            background: #fff;
+            border-radius: 18px;
+            padding: 2rem 1.5rem;
+            border: 2px solid var(--border);
+            cursor: pointer;
+            transition: all .3s cubic-bezier(.4, 0, .2, 1);
+            text-decoration: none;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: .8rem;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, .05);
+        }
+
+        .role-option:hover {
+            border-color: var(--green);
+            transform: translateY(-6px);
+            box-shadow: 0 16px 40px rgba(26, 107, 58, .15);
+        }
+
+        .role-option.employee:hover {
+            border-color: #3b82f6;
+            box-shadow: 0 16px 40px rgba(59, 130, 246, .15);
+        }
+
+        .role-option.manager:hover {
+            border-color: #7c3aed;
+            box-shadow: 0 16px 40px rgba(139, 92, 246, .15);
+        }
+
+        .role-option.admin:hover {
+            border-color: var(--gold);
+            box-shadow: 0 16px 40px rgba(201, 168, 76, .15);
+        }
+
+        .ro-emoji {
+            font-size: 2.8rem;
+        }
+
+        .ro-badge {
+            font-size: .72rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: .07em;
+            padding: .25rem .8rem;
+            border-radius: 50px;
+            background: rgba(26, 107, 58, .1);
+            color: var(--green);
+        }
+
+        .employee .ro-badge {
+            background: rgba(59, 130, 246, .1);
+            color: #2563eb;
+        }
+
+        .manager .ro-badge {
+            background: rgba(139, 92, 246, .1);
+            color: #7c3aed;
+        }
+
+        .admin .ro-badge {
+            background: rgba(201, 168, 76, .1);
+            color: var(--gold);
+        }
+
+        .ro-title {
+            font-size: 1.05rem;
+            font-weight: 800;
+            color: var(--charcoal);
+        }
+
+        .ro-desc {
+            font-size: .82rem;
+            color: var(--text-3);
+            line-height: 1.7;
+        }
+
+        .ro-arrow {
+            font-size: .85rem;
+            font-weight: 700;
+            color: var(--green);
+            margin-top: .3rem;
+        }
+
+        .employee .ro-arrow {
+            color: #2563eb;
+        }
+
+        .manager .ro-arrow {
+            color: #7c3aed;
+        }
+
+        .admin .ro-arrow {
+            color: var(--gold);
+        }
+
+        .already-login {
+            margin-top: 2rem;
+            font-size: .88rem;
+            color: var(--text-3);
+        }
+
+        .already-login a {
+            color: var(--green);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .admin-note {
+            font-size: .74rem;
+            color: var(--text-3);
+            margin-top: .3rem;
+        }
+
+        .fade-in {
+            animation: fade-reveal .5s ease forwards;
+        }
+
+        @keyframes fade-reveal {
+            from {
+                opacity: 0;
+                transform: translateY(16px)
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0)
+            }
+        }
+
+        .role-option {
+            animation: fade-reveal .5s ease both;
+        }
+
+        .role-option:nth-child(1) {
+            animation-delay: .05s
+        }
+
+        .role-option:nth-child(2) {
+            animation-delay: .1s
+        }
+
+        .role-option:nth-child(3) {
+            animation-delay: .15s
+        }
+
+        .role-option:nth-child(4) {
+            animation-delay: .2s
+        }
+    </style>
+</head>
+
+<body>
+    <div class="top-bar"></div>
+    <div class="pg-overlay" id="pgOverlay"></div>
+
+    <div class="rs-header fade-in">
+        <a href="../index.html" class="rs-logo">
+            <span style="font-size:1.5rem">🌿</span>
+            <span class="rs-logo-text">CropGuardian<em>AI</em></span>
+        </a>
+        <h1 class="rs-title">Choose Your Role</h1>
+        <p class="rs-sub">Select how you'll be using CropGuardianAI to get started.</p>
+    </div>
+
+    <div class="role-grid">
+        <a class="role-option" onclick="go('register-farmer.html')">
+            <div class="ro-emoji">🌾</div>
+            <span class="ro-badge">Farmer</span>
+            <div class="ro-title">I'm a Farmer</div>
+            <div class="ro-desc">Monitor my crop batches, receive spoilage alerts, and view AI predictions for my stored
+                produce.</div>
+            <div class="ro-arrow">Register as Farmer →</div>
+        </a>
+        <a class="role-option employee" onclick="go('register-employee.html')">
+            <div class="ro-emoji">👨‍💻</div>
+            <span class="ro-badge">Employee</span>
+            <div class="ro-title">I'm an Employee</div>
+            <div class="ro-desc">Operate sensor data, manage farmer records, send alerts, and monitor CCTV feeds.</div>
+            <div class="ro-arrow">Register as Employee →</div>
+        </a>
+        <a class="role-option manager" onclick="go('register-manager.html')">
+            <div class="ro-emoji">👔</div>
+            <span class="ro-badge">Manager</span>
+            <div class="ro-title">I'm a Manager</div>
+            <div class="ro-desc">Access analytics dashboards, digital twin simulations, team management, and executive
+                reports.</div>
+            <div class="ro-arrow">Register as Manager →</div>
+        </a>
+        <a class="role-option admin" style="cursor:default; opacity:.75">
+            <div class="ro-emoji">👑</div>
+            <span class="ro-badge">Admin</span>
+            <div class="ro-title">Administrator</div>
+            <div class="ro-desc">Full system control. Admin accounts are provisioned internally and cannot
+                self-register.</div>
+            <div class="ro-arrow">Contact System Admin</div>
+            <div class="admin-note">admin@cropguardian.ai</div>
+        </a>
+    </div>
+
+    <p class="already-login">Already have an account? <a onclick="go('login.html')" style="cursor:pointer">Log in
+            here</a></p>
+
+    <script>
+        function go(url) {
+            const ov = document.getElementById('pgOverlay');
+            ov.classList.add('show');
+            setTimeout(() => window.location.href = url, 400);
+        }
+    </script>
+</body>
+
+</html>

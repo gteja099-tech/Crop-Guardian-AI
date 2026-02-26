@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Dashboard — CropGuardianAI</title>
+    <link rel="stylesheet" href="../css/dashboard.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+    <div class="top-bar"></div>
+    <div class="pg-overlay" id="pgOverlay"></div>
+    <div class="toast-stack" id="toastStack"></div>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+        <a href="../index.html" class="sidebar-logo">
+            <span class="sl-icon">🌿</span>
+            <span class="sl-text">CropGuardian<em>AI</em></span>
+        </a>
+        <div class="sidebar-user">
+            <div class="su-name" id="sbName">Venkat Reddy</div>
+            <div class="su-email" id="sbEmail">venkat@demo.com</div>
+            <div><span class="su-badge employee">👨‍💻 Employee</span></div>
+            <div style="font-size:.7rem;color:rgba(255,255,255,.3);margin-top:.2rem" id="empIdBadge">ID: EMP-A4F2</div>
+        </div>
+        <nav class="sidebar-nav">
+            <div class="nav-section-label">Operations</div>
+            <a class="nav-item active" onclick="showSection('overview')"><span class="nav-icon">📊</span> Overview</a>
+            <a class="nav-item" onclick="showSection('sensors')"><span class="nav-icon">🎛️</span> Sensor Control</a>
+            <a class="nav-item" onclick="showSection('farmers')"><span class="nav-icon">👨‍🌾</span> Farmer
+                Management</a>
+            <a class="nav-item" onclick="showSection('alerts')"><span class="nav-icon">📢</span> Send Alerts <span
+                    class="nav-badge" style="background:#ef4444">3</span></a>
+            <div class="nav-section-label">Surveillance</div>
+            <a class="nav-item" onclick="showSection('cctv')"><span class="nav-icon">📹</span> CCTV Monitor</a>
+        </nav>
+        <div class="sidebar-footer">
+            <button class="btn-logout" onclick="logout()">⬅ Sign Out</button>
+        </div>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main">
+        <div class="topbar">
+            <div class="topbar-title" id="topbarTitle">Employee Dashboard</div>
+            <div class="topbar-time" id="topbarTime"></div>
+            <div class="notif-btn" onclick="showSection('alerts')">🔔<div class="notif-dot"></div>
+            </div>
+            <div class="avatar-btn" id="avatarBtn">V</div>
+        </div>
+
+        <div class="page-content">
+
+            <!-- ══ OVERVIEW ══ -->
+            <div id="sec-overview">
+                <div class="page-header">
+                    <h1>Employee Operations Center</h1>
+                    <p>Monitor units, manage farmers, and send alerts across the facility</p>
+                </div>
+                <div class="kpi-grid">
+                    <div class="kpi-card" style="--kpi-color:#22c55e">
+                        <div class="kpi-icon">📦</div>
+                        <div class="kpi-label">Active Batches</div>
+                        <div class="kpi-value">24</div>
+                        <div class="kpi-unit">Across all units</div>
+                    </div>
+                    <div class="kpi-card" style="--kpi-color:#3b82f6">
+                        <div class="kpi-icon">👨‍🌾</div>
+                        <div class="kpi-label">Farmers Managed</div>
+                        <div class="kpi-value">18</div>
+                        <div class="kpi-unit">Registered farmers</div>
+                    </div>
+                    <div class="kpi-card" style="--kpi-color:#ef4444">
+                        <div class="kpi-icon">⚠️</div>
+                        <div class="kpi-label">Active Alerts</div>
+                        <div class="kpi-value">3</div>
+                        <div class="kpi-unit">Require attention</div>
+                    </div>
+                    <div class="kpi-card" style="--kpi-color:#c9a84c">
+                        <div class="kpi-icon">✅</div>
+                        <div class="kpi-label">Sensors Online</div>
+                        <div class="kpi-value">48</div>
+                        <div class="kpi-unit">/ 50 total sensors</div>
+                    </div>
+                </div>
+
+                <!-- Unit status table -->
+                <div class="section-card">
+                    <div class="card-header">
+                        <div class="card-title">Storage Units Status</div>
+                    </div>
+                    <div class="card-body" style="overflow-x:auto">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Unit</th>
+                                    <th>Location</th>
+                                    <th>Temp</th>
+                                    <th>Humidity</th>
+                                    <th>Capacity</th>
+                                    <th>Status</th>
+                                    <th>Last Check</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="cell-name">Unit 1</td>
+                                    <td>Tadepalligudam</td>
+                                    <td id="utmp1">4.2°C</td>
+                                    <td>87%</td>
+                                    <td>72%</td>
+                                    <td><span class="badge badge-active">Optimal</span></td>
+                                    <td>2 min ago</td>
+                                </tr>
+                                <tr>
+                                    <td class="cell-name">Unit 2</td>
+                                    <td>Tadepalligudam</td>
+                                    <td id="utmp2">3.9°C</td>
+                                    <td id="uhum2">91%</td>
+                                    <td>85%</td>
+                                    <td><span class="badge badge-risk-high">High Risk</span></td>
+                                    <td>1 min ago</td>
+                                </tr>
+                                <tr>
+                                    <td class="cell-name">Unit 3</td>
+                                    <td>Vijayawada</td>
+                                    <td>5.1°C</td>
+                                    <td>85%</td>
+                                    <td>55%</td>
+                                    <td><span class="badge badge-risk-med">Medium</span></td>
+                                    <td>5 min ago</td>
+                                </tr>
+                                <tr>
+                                    <td class="cell-name">Unit 4</td>
+                                    <td>Guntur</td>
+                                    <td>4.5°C</td>
+                                    <td>83%</td>
+                                    <td>40%</td>
+                                    <td><span class="badge badge-active">Optimal</span></td>
+                                    <td>3 min ago</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ══ SENSOR CONTROL ══ -->
+            <div id="sec-sensors" style="display:none">
+                <div class="page-header">
+                    <h1>Sensor Control Panel</h1>
+                    <p>Adjust demo sensor data to test alert thresholds</p>
+                </div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem">
+                    <div class="section-card">
+                        <div class="card-header">
+                            <div class="card-title">🌡️ Temperature Control</div>
+                            <div class="card-sub" id="tempStatus">Status: Optimal</div>
+                        </div>
+                        <div class="card-body">
+                            <div class="twin-controls">
+                                <div class="slider-group">
+                                    <div class="slider-label-row"><span class="slider-label">Unit 1
+                                            Temperature</span><span class="slider-val" id="t1Val">4.2°C</span></div>
+                                    <input type="range" class="slider-input" min="-2" max="12" step="0.1" value="4.2"
+                                        oninput="updateTemp(this,'t1Val','t1Status',4.5)">
+                                    <div id="t1Status" style="font-size:.78rem;margin-top:.3rem;color:#22c55e">✓ Within
+                                        optimal range (2–6°C)</div>
+                                </div>
+                                <div class="slider-group">
+                                    <div class="slider-label-row"><span class="slider-label">Unit 2
+                                            Temperature</span><span class="slider-val" id="t2Val">3.9°C</span></div>
+                                    <input type="range" class="slider-input" min="-2" max="12" step="0.1" value="3.9"
+                                        oninput="updateTemp(this,'t2Val','t2Status',4.5)">
+                                    <div id="t2Status" style="font-size:.78rem;margin-top:.3rem;color:#22c55e">✓ Within
+                                        optimal range (2–6°C)</div>
+                                </div>
+                                <div class="slider-group">
+                                    <div class="slider-label-row"><span class="slider-label">Unit 3
+                                            Temperature</span><span class="slider-val" id="t3Val">5.1°C</span></div>
+                                    <input type="range" class="slider-input" min="-2" max="12" step="0.1" value="5.1"
+                                        oninput="updateTemp(this,'t3Val','t3Status',4.5)">
+                                    <div id="t3Status" style="font-size:.78rem;margin-top:.3rem;color:#f59e0b">⚠
+                                        Slightly above optimal</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="section-card">
+                        <div class="card-header">
+                            <div class="card-title">💧 Humidity Control</div>
+                        </div>
+                        <div class="card-body">
+                            <div class="twin-controls">
+                                <div class="slider-group">
+                                    <div class="slider-label-row"><span class="slider-label">Unit 1 Humidity</span><span
+                                            class="slider-val" id="h1Val">87%</span></div>
+                                    <input type="range" class="slider-input" min="50" max="100" step="1" value="87"
+                                        oninput="updateHum(this,'h1Val','h1Status',90)">
+                                    <div id="h1Status" style="font-size:.78rem;margin-top:.3rem;color:#22c55e">✓ Normal
+                                        (80–92%)</div>
+                                </div>
+                                <div class="slider-group">
+                                    <div class="slider-label-row"><span class="slider-label">Unit 2 Humidity</span><span
+                                            class="slider-val" id="h2Val">94%</span></div>
+                                    <input type="range" class="slider-input" min="50" max="100" step="1" value="94"
+                                        oninput="updateHum(this,'h2Val','h2Status',90)">
+                                    <div id="h2Status" style="font-size:.78rem;margin-top:.3rem;color:#ef4444">🚨
+                                        Critical — above 92% triggers alert</div>
+                                </div>
+                                <div class="slider-group">
+                                    <div class="slider-label-row"><span class="slider-label">Unit 3 Humidity</span><span
+                                            class="slider-val" id="h3Val">85%</span></div>
+                                    <input type="range" class="slider-input" min="50" max="100" step="1" value="85"
+                                        oninput="updateHum(this,'h3Val','h3Status',90)">
+                                    <div id="h3Status" style="font-size:.78rem;margin-top:.3rem;color:#22c55e">✓ Normal
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Live chart -->
+                <div class="section-card" style="margin-top:1.5rem">
+                    <div class="card-header">
+                        <div class="card-title">Real-Time Sensor Chart</div>
+                        <div class="card-sub">Updates every 5s</div>
+                    </div>
+                    <div class="card-body"><canvas id="sensorChart" height="100"></canvas></div>
+                </div>
+            </div>
+
+            <!-- ══ FARMER MANAGEMENT ══ -->
+            <div id="sec-farmers" style="display:none">
+                <div class="page-header">
+                    <h1>Farmer Management</h1>
+                    <p>Manage farmer records and storage assignments</p>
+                </div>
+                <div class="section-card">
+                    <div class="card-header">
+                        <div>
+                            <div class="card-title">Registered Farmers</div>
+                            <div class="card-sub">18 farmers · 24 active batches</div>
+                        </div>
+                        <button class="btn-sm solid" onclick="openAddFarmer()">+ Add Farmer</button>
+                    </div>
+                    <div class="card-body" style="overflow-x:auto">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Phone</th>
+                                    <th>Unit</th>
+                                    <th>Batches</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="farmerTable"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ══ ALERTS ══ -->
+            <div id="sec-alerts" style="display:none">
+                <div class="page-header">
+                    <h1>Alert Management</h1>
+                    <p>Send manual alerts via SMS, WhatsApp, and Voice Call</p>
+                </div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem">
+                    <div class="section-card">
+                        <div class="card-header">
+                            <div class="card-title">Quick Alert Panel</div>
+                        </div>
+                        <div class="card-body" style="display:flex;flex-direction:column;gap:1rem">
+                            <div class="form-group" style="margin:0">
+                                <label style="font-size:.82rem;font-weight:600;color:var(--text-2)">Storage Unit</label>
+                                <select id="alertUnit" class="role-select"
+                                    style="border:1.5px solid rgba(0,0,0,.1);margin-top:.3rem;width:100%">
+                                    <option>Unit 1 — All Farmers</option>
+                                    <option>Unit 2 — All Farmers</option>
+                                    <option>Unit 3 — All Farmers</option>
+                                    <option>Broadcast to All</option>
+                                </select>
+                            </div>
+                            <div class="form-group" style="margin:0">
+                                <label style="font-size:.82rem;font-weight:600;color:var(--text-2)">Alert Type</label>
+                                <select id="alertType" class="role-select"
+                                    style="border:1.5px solid rgba(0,0,0,.1);margin-top:.3rem;width:100%">
+                                    <option value="temp">🌡️ Temperature Alert</option>
+                                    <option value="humidity">💧 Humidity Alert</option>
+                                    <option value="spoilage">⚠ Spoilage Risk Alert</option>
+                                    <option value="expiry">📅 Batch Expiry Warning</option>
+                                    <option value="power">⚡ Power Outage Alert</option>
+                                </select>
+                            </div>
+                            <div class="form-group" style="margin:0">
+                                <label style="font-size:.82rem;font-weight:600;color:var(--text-2)">Custom Message
+                                    (optional)</label>
+                                <textarea id="alertMsg"
+                                    style="width:100%;padding:.7rem;border-radius:9px;border:1.5px solid rgba(0,0,0,.1);font-family:'Inter',sans-serif;font-size:.88rem;resize:vertical;min-height:80px;outline:none"
+                                    placeholder="Add custom message..."></textarea>
+                            </div>
+                            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:.5rem">
+                                <button
+                                    style="padding:.7rem;border-radius:10px;background:#dbeafe;color:#1d4ed8;border:none;font-weight:700;cursor:pointer;font-size:.82rem"
+                                    onclick="sendQuickAlert('sms')">📱 SMS</button>
+                                <button
+                                    style="padding:.7rem;border-radius:10px;background:#dcfce7;color:#15803d;border:none;font-weight:700;cursor:pointer;font-size:.82rem"
+                                    onclick="sendQuickAlert('wa')">📲 WhatsApp</button>
+                                <button
+                                    style="padding:.7rem;border-radius:10px;background:#f3e8ff;color:#7c3aed;border:none;font-weight:700;cursor:pointer;font-size:.82rem"
+                                    onclick="sendQuickAlert('voice')">📞 Voice</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Alert history -->
+                    <div class="section-card">
+                        <div class="card-header">
+                            <div class="card-title">Alert History</div>
+                        </div>
+                        <div class="card-body" style="overflow-y:auto;max-height:400px">
+                            <div id="alertHistory" style="display:flex;flex-direction:column;gap:.7rem"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Active threshold alerts -->
+                <div class="section-card" style="margin-top:1.5rem">
+                    <div class="card-header">
+                        <div class="card-title">⚠ Active Threshold Alerts</div>
+                    </div>
+                    <div class="card-body">
+                        <div class="alert-card danger">
+                            <div class="alert-icon-l">🚨</div>
+                            <div class="alert-content">
+                                <div class="alert-title">Unit 2 — Humidity Critical: 94%</div>
+                                <div class="alert-desc">Tomato Batch B4. Optimal: 82–88%. Spoilage risk: 78%.</div>
+                                <div class="alert-actions">
+                                    <button class="btn-alert sms" onclick="sendQuickAlert('sms')">📱 SMS
+                                        Farmers</button>
+                                    <button class="btn-alert wa" onclick="sendQuickAlert('wa')">📲 WhatsApp</button>
+                                    <button class="btn-alert call" onclick="sendQuickAlert('voice')">📞 Voice
+                                        Call</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ══ CCTV ══ -->
+            <div id="sec-cctv" style="display:none">
+                <div class="page-header">
+                    <h1>CCTV Surveillance</h1>
+                    <p>Live feeds from all storage facility cameras</p>
+                </div>
+                <div class="cctv-grid" id="cctvGrid"></div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Add Farmer Modal -->
+    <div class="modal-overlay" id="addFarmerModal" style="display:none"
+        onclick="if(event.target===this)this.style.display='none'">
+        <div class="modal-box">
+            <h2 class="modal-title">Add New Farmer</h2>
+            <p style="font-size:.82rem;color:var(--text-3);margin-bottom:1.5rem">Register a farmer into the
+                CropGuardianAI system</p>
+            <div style="display:flex;flex-direction:column;gap:.9rem">
+                <div class="form-group" style="margin:0"><label
+                        style="font-size:.82rem;font-weight:600;color:var(--text-2)">Full Name *</label><input
+                        id="nfName"
+                        style="padding:.7rem;border-radius:9px;border:1.5px solid rgba(0,0,0,.1);width:100%;font-family:'Inter',sans-serif;font-size:.9rem;outline:none;margin-top:.3rem"
+                        placeholder="Farmer name"></div>
+                <div class="form-group" style="margin:0"><label
+                        style="font-size:.82rem;font-weight:600;color:var(--text-2)">Email *</label><input id="nfEmail"
+                        type="email"
+                        style="padding:.7rem;border-radius:9px;border:1.5px solid rgba(0,0,0,.1);width:100%;font-family:'Inter',sans-serif;font-size:.9rem;outline:none;margin-top:.3rem"
+                        placeholder="farmer@email.com"></div>
+                <div class="form-group" style="margin:0"><label
+                        style="font-size:.82rem;font-weight:600;color:var(--text-2)">Phone *</label><input id="nfPhone"
+                        type="tel"
+                        style="padding:.7rem;border-radius:9px;border:1.5px solid rgba(0,0,0,.1);width:100%;font-family:'Inter',sans-serif;font-size:.9rem;outline:none;margin-top:.3rem"
+                        placeholder="9876543210"></div>
+                <div class="form-group" style="margin:0">
+                    <label style="font-size:.82rem;font-weight:600;color:var(--text-2)">Assign Storage Unit</label>
+                    <select id="nfUnit" class="role-select" style="border:1.5px solid rgba(0,0,0,.1);margin-top:.3rem">
+                        <option>Unit 1</option>
+                        <option>Unit 2</option>
+                        <option>Unit 3</option>
+                    </select>
+                </div>
+            </div>
+            <div style="display:flex;gap:.6rem;margin-top:1.5rem">
+                <button onclick="document.getElementById('addFarmerModal').style.display='none'"
+                    style="flex:1;padding:.8rem;border-radius:10px;border:1.5px solid rgba(0,0,0,.1);background:#fff;cursor:pointer;font-family:'Inter',sans-serif;font-weight:600">Cancel</button>
+                <button onclick="addFarmer()"
+                    style="flex:2;padding:.8rem;border-radius:10px;background:var(--green);color:#fff;border:none;cursor:pointer;font-family:'Inter',sans-serif;font-weight:700">Add
+                    Farmer</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/transitions.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/dashboard-employee.js"></script>
+</body>
+
+</html>

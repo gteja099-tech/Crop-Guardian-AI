@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Farmer Dashboard — CropGuardianAI</title>
+    <link rel="stylesheet" href="../css/dashboard.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+    <div class="top-bar"></div>
+    <div class="pg-overlay" id="pgOverlay"></div>
+    <div class="toast-stack" id="toastStack"></div>
+
+    <!-- WELCOME OVERLAY -->
+    <div class="welcome-overlay" id="welcomeOverlay">
+        <div class="welcome-modal">
+            <div class="wm-ring">🌾</div>
+            <div class="wm-name" id="wmName">Ravi Shankar</div>
+            <div class="wm-role">Farmer Account</div>
+            <div class="wm-storage" id="wmStorage">Tadepalligudam Cold Storage Unit 1</div>
+            <p style="font-size:.82rem;color:var(--text-3);margin-top:.8rem;line-height:1.6">Your crops are being
+                monitored. All systems are active.</p>
+        </div>
+    </div>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+        <a href="../index.html" class="sidebar-logo">
+            <span class="sl-icon">🌿</span>
+            <span class="sl-text">CropGuardian<em>AI</em></span>
+        </a>
+        <div class="sidebar-user">
+            <div class="su-name" id="sbName">Ravi Shankar</div>
+            <div class="su-email" id="sbEmail">ravi@demo.com</div>
+            <span class="su-badge">🌾 Farmer</span>
+        </div>
+        <nav class="sidebar-nav">
+            <div class="nav-section-label">Overview</div>
+            <a class="nav-item active" onclick="showSection('dashboard')"><span class="nav-icon">📊</span> Dashboard</a>
+            <a class="nav-item" onclick="showSection('crops')"><span class="nav-icon">🌾</span> My Crops <span
+                    class="nav-badge">6</span></a>
+            <a class="nav-item" onclick="showSection('monitoring')"><span class="nav-icon">🌡️</span> Monitoring</a>
+            <div class="nav-section-label">AI & Analytics</div>
+            <a class="nav-item" onclick="showSection('predictions')"><span class="nav-icon">🤖</span> AI Predictions</a>
+            <a class="nav-item" onclick="showSection('reports')"><span class="nav-icon">📄</span> Reports</a>
+            <div class="nav-section-label">Support</div>
+            <a class="nav-item" onclick="showSection('chat')"><span class="nav-icon">💬</span> AI Assistant</a>
+            <a class="nav-item" onclick="showSection('alerts')"><span class="nav-icon">🔔</span> Alerts <span
+                    class="nav-badge" style="background:#ef4444">2</span></a>
+        </nav>
+        <div class="sidebar-footer">
+            <button class="btn-logout" onclick="logout()">⬅ Sign Out</button>
+        </div>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main">
+        <div class="topbar">
+            <button onclick="toggleSidebar()"
+                style="background:none;border:none;cursor:pointer;font-size:1.2rem;display:none" id="menuBtn">☰</button>
+            <div class="topbar-title" id="topbarTitle">Farmer Dashboard</div>
+            <div class="topbar-search">
+                <span>🔍</span>
+                <input type="text" placeholder="Search crops, units...">
+            </div>
+            <div class="topbar-time" id="topbarTime"></div>
+            <div class="notif-btn" onclick="showSection('alerts')">🔔<div class="notif-dot"></div>
+            </div>
+            <div class="avatar-btn" id="avatarBtn">R</div>
+        </div>
+
+        <div class="page-content">
+
+            <!-- ══ DASHBOARD SECTION ══ -->
+            <div id="sec-dashboard">
+                <div class="page-header">
+                    <h1>Good morning, <span id="greetName">Ravi</span> 👋</h1>
+                    <p>Here's your cold storage overview for today</p>
+                </div>
+
+                <!-- KPI Cards -->
+                <div class="kpi-grid">
+                    <div class="kpi-card" style="--kpi-color:#22c55e">
+                        <div class="kpi-icon">🌡️</div>
+                        <div class="kpi-label">Temperature</div>
+                        <div class="kpi-value" id="kpiTemp">4.2</div>
+                        <div class="kpi-unit">°C · Unit 1</div>
+                        <div class="kpi-delta up" id="kpiTempDelta">✓ Optimal Range</div>
+                    </div>
+                    <div class="kpi-card" style="--kpi-color:#3b82f6">
+                        <div class="kpi-icon">💧</div>
+                        <div class="kpi-label">Humidity</div>
+                        <div class="kpi-value" id="kpiHumidity">87</div>
+                        <div class="kpi-unit">% · Unit 1</div>
+                        <div class="kpi-delta up" id="kpiHumDelta">✓ Normal</div>
+                    </div>
+                    <div class="kpi-card" style="--kpi-color:#c9a84c">
+                        <div class="kpi-icon">📦</div>
+                        <div class="kpi-label">Active Batches</div>
+                        <div class="kpi-value">6</div>
+                        <div class="kpi-unit">Crop batches stored</div>
+                        <div class="kpi-delta up">↑ +1 this week</div>
+                    </div>
+                    <div class="kpi-card" style="--kpi-color:#7c3aed">
+                        <div class="kpi-icon">⏱️</div>
+                        <div class="kpi-label">Avg Storage Days</div>
+                        <div class="kpi-value">18</div>
+                        <div class="kpi-unit">days per batch</div>
+                        <div class="kpi-delta up">↑ Optimal</div>
+                    </div>
+                </div>
+
+                <!-- Warning banner -->
+                <div class="alert-card danger" id="spoilageBanner">
+                    <div class="alert-icon-l">⚠️</div>
+                    <div class="alert-content">
+                        <div class="alert-title">High Spoilage Risk Detected — Tomato Batch B4</div>
+                        <div class="alert-desc">AI predicts 78% spoilage probability within 48 hours due to humidity
+                            spike in Unit 2. Immediate action recommended.</div>
+                        <div class="alert-actions">
+                            <button class="btn-alert sms" onclick="sendAlert('sms')">📱 SMS Alert</button>
+                            <button class="btn-alert wa" onclick="sendAlert('wa')">📲 WhatsApp</button>
+                            <button class="btn-alert call" onclick="sendAlert('voice')">📞 Voice Call</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Storage Health + Charts -->
+                <div style="display:grid;grid-template-columns:280px 1fr;gap:1.5rem;margin-bottom:1.5rem">
+                    <!-- Health gauge -->
+                    <div class="section-card">
+                        <div class="card-header"><span class="card-title">Storage Health</span></div>
+                        <div class="card-body" style="display:flex;flex-direction:column;align-items:center;gap:1rem">
+                            <div class="gauge-wrap">
+                                <svg class="gauge-svg" width="140" height="140" viewBox="0 0 140 140">
+                                    <circle class="gauge-bg" cx="70" cy="70" r="56" stroke-width="12" />
+                                    <circle class="gauge-fill" id="gaugeCircle" cx="70" cy="70" r="56" stroke-width="12"
+                                        stroke="url(#gaugeGrad)" stroke-dasharray="351.9" stroke-dashoffset="351.9" />
+                                    <defs>
+                                        <linearGradient id="gaugeGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                                            <stop offset="0%" stop-color="#1a6b3a" />
+                                            <stop offset="100%" stop-color="#22c55e" />
+                                        </linearGradient>
+                                    </defs>
+                                </svg>
+                                <div class="gauge-center">
+                                    <div class="gauge-val" id="gaugeVal">0</div>
+                                    <div class="gauge-lbl">/ 100</div>
+                                </div>
+                            </div>
+                            <div style="text-align:center">
+                                <div style="font-size:.82rem;font-weight:700;color:#22c55e">Excellent</div>
+                                <div style="font-size:.75rem;color:var(--text-3)">All units operating normally</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Temp chart -->
+                    <div class="section-card">
+                        <div class="card-header">
+                            <div>
+                                <div class="card-title">Temperature Trend</div>
+                                <div class="card-sub">Real-time monitoring</div>
+                            </div>
+                            <div class="chart-tabs">
+                                <button class="chart-tab active" onclick="switchChart('24h',this)">24H</button>
+                                <button class="chart-tab" onclick="switchChart('7d',this)">7D</button>
+                                <button class="chart-tab" onclick="switchChart('30d',this)">30D</button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="tempChart" height="100"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- AI Predictions -->
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem">
+                    <div class="section-card">
+                        <div class="card-header">
+                            <div class="card-title">🤖 AI Prediction</div>
+                            <span class="badge badge-risk-low">Low Risk</span>
+                        </div>
+                        <div class="card-body">
+                            <div style="display:flex;flex-direction:column;gap:1rem">
+                                <div>
+                                    <div
+                                        style="font-size:.75rem;color:var(--text-3);font-weight:700;text-transform:uppercase;letter-spacing:.05em">
+                                        Remaining Safe Days</div>
+                                    <div style="font-size:2.5rem;font-weight:900;color:var(--green);line-height:1"
+                                        id="safeDays">14</div>
+                                    <div style="font-size:.8rem;color:var(--text-3)">Potato Batch B1 · Unit 1</div>
+                                </div>
+                                <div>
+                                    <div
+                                        style="font-size:.75rem;color:var(--text-3);font-weight:700;text-transform:uppercase;letter-spacing:.05em;margin-bottom:.4rem">
+                                        Spoilage Risk</div>
+                                    <div class="risk-val" style="color:#22c55e" id="riskPercent">12%</div>
+                                    <div class="risk-meter">
+                                        <div class="risk-bar-wrap">
+                                            <div class="risk-bar-fill" id="riskBar"
+                                                style="width:12%;background:#22c55e"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style="background:var(--off-white);border-radius:10px;padding:1rem">
+                                    <div
+                                        style="font-size:.75rem;font-weight:700;color:var(--charcoal);margin-bottom:.3rem">
+                                        🎯 Recommended Action</div>
+                                    <div style="font-size:.85rem;color:var(--text-2);line-height:1.6" id="aiAction">
+                                        Maintain current temperature settings. Slight humidity reduction by 2% advised
+                                        to optimize shelf life.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Humidity chart -->
+                    <div class="section-card">
+                        <div class="card-header">
+                            <div class="card-title">Humidity Monitor</div>
+                            <div class="card-sub">Live · updates every 5s</div>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="humChart" height="160"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ══ CROPS SECTION ══ -->
+            <div id="sec-crops" style="display:none">
+                <div class="page-header">
+                    <h1>My Crop Batches</h1>
+                    <p>FEFO-ordered inventory — First Expired, First Out</p>
+                </div>
+                <div class="section-card">
+                    <div class="card-header">
+                        <div>
+                            <div class="card-title">Active & Historical Batches</div>
+                            <div class="card-sub">6 active · 4 withdrawn</div>
+                        </div>
+                        <div class="card-actions">
+                            <button class="btn-sm solid" onclick="openAddCropModal()">+ Add Batch</button>
+                        </div>
+                    </div>
+                    <div class="card-body" style="overflow-x:auto">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Crop</th>
+                                    <th>Unit</th>
+                                    <th>Quantity</th>
+                                    <th>Stored</th>
+                                    <th>Expires</th>
+                                    <th>Cost</th>
+                                    <th>Risk</th>
+                                    <th>Status</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody id="cropTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ══ MONITORING SECTION ══ -->
+            <div id="sec-monitoring" style="display:none">
+                <div class="page-header">
+                    <h1>Real-Time Monitoring</h1>
+                    <p>Live sensor data from all storage units · Updates every 5 seconds</p>
+                </div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem">
+                    <div class="section-card">
+                        <div class="card-header">
+                            <div class="card-title">Sensor Network</div>
+                            <div class="card-sub"><span style="color:#22c55e">●</span> 6/6 Active</div>
+                        </div>
+                        <div class="card-body">
+                            <div class="sensor-list" id="sensorList"></div>
+                        </div>
+                    </div>
+                    <div class="section-card">
+                        <div class="card-header">
+                            <div class="card-title">Live Readings</div>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="liveChart" height="200"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ══ PREDICTIONS SECTION ══ -->
+            <div id="sec-predictions" style="display:none">
+                <div class="page-header">
+                    <h1>AI Predictions Center</h1>
+                    <p>ML-powered spoilage predictions for all your crop batches</p>
+                </div>
+                <div id="predictionCards"></div>
+            </div>
+
+            <!-- ══ CHAT SECTION ══ -->
+            <div id="sec-chat" style="display:none">
+                <div class="page-header">
+                    <h1>AI Storage Assistant</h1>
+                    <p>Ask anything about your crops, storage, or spoilage risks</p>
+                </div>
+                <div class="section-card">
+                    <div class="card-header">
+                        <div class="card-title">💬 CropGuardian AI</div>
+                        <div class="lang-toggle">
+                            <button class="lang-btn active" id="langEn" onclick="setLang('en')">EN</button>
+                            <button class="lang-btn" id="langTe" onclick="setLang('te')">తె</button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="quick-prompts">
+                            <span class="qp" onclick="askBot('What is the spoilage risk for my potato batch?')">🥔
+                                Potato Risk?</span>
+                            <span class="qp" onclick="askBot('Why is humidity important for cold storage?')">💧 Humidity
+                                Tips</span>
+                            <span class="qp" onclick="askBot('How many days can I store tomatoes?')">🍅 Tomato Shelf
+                                Life</span>
+                            <span class="qp" onclick="askBot('What action should I take for high temperature?')">🌡️
+                                High Temp Action</span>
+                        </div>
+                        <div class="chat-container">
+                            <div class="chat-messages" id="chatMessages">
+                                <div class="chat-msg msg-bot">
+                                    <div class="msg-header">🤖 CropGuardian AI</div>
+                                    Hello Ravi! I'm monitoring your 6 crop batches. Your potato batch has a low spoilage
+                                    risk today. How can I assist you?
+                                </div>
+                            </div>
+                            <div class="chat-input-row">
+                                <input class="chat-input" id="chatInput" placeholder="Ask about your crops..."
+                                    onkeydown="if(event.key==='Enter')sendChat()">
+                                <button class="btn-send" onclick="sendChat()">➤</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ══ ALERTS SECTION ══ -->
+            <div id="sec-alerts" style="display:none">
+                <div class="page-header">
+                    <h1>Alerts & Notifications</h1>
+                    <p>2 unread alerts require your attention</p>
+                </div>
+                <div class="alert-card danger">
+                    <div class="alert-icon-l">🚨</div>
+                    <div class="alert-content">
+                        <div class="alert-title">Critical: Humidity Spike — Unit 2</div>
+                        <div class="alert-desc">Humidity reached 94% in Unit 2 (Tomato Batch B4). Optimal range: 82–88%.
+                            Immediate cooling adjustment required.</div>
+                        <div class="alert-time">Today, 2:14 PM</div>
+                        <div class="alert-actions">
+                            <button class="btn-alert sms" onclick="sendAlert('sms')">📱 SMS</button>
+                            <button class="btn-alert wa" onclick="sendAlert('wa')">📲 WhatsApp</button>
+                            <button class="btn-alert call" onclick="sendAlert('voice')">📞 Voice</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="alert-card warn">
+                    <div class="alert-icon-l">⚠️</div>
+                    <div class="alert-content">
+                        <div class="alert-title">Batch Nearing Expiry — Onion Batch B6</div>
+                        <div class="alert-desc">Onion Batch B6 (240 kg) has 4 days remaining before expiry. Plan
+                            withdrawal to prevent losses.</div>
+                        <div class="alert-time">Yesterday, 9:30 AM</div>
+                    </div>
+                </div>
+                <div class="alert-card">
+                    <div class="alert-icon-l">✅</div>
+                    <div class="alert-content">
+                        <div class="alert-title">System: All Sensors Operating Normally</div>
+                        <div class="alert-desc">All 6 sensors in Unit 1 are within normal operating parameters.</div>
+                        <div class="alert-time">Today, 8:00 AM</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ══ REPORTS SECTION ══ -->
+            <div id="sec-reports" style="display:none">
+                <div class="page-header">
+                    <h1>Reports</h1>
+                    <p>Download professional PDF reports for your storage batches</p>
+                </div>
+                <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1rem">
+                    <div class="section-card">
+                        <div class="card-body" style="text-align:center;padding:2rem">
+                            <div style="font-size:2.5rem;margin-bottom:.8rem">📊</div>
+                            <div style="font-weight:800;color:var(--charcoal);margin-bottom:.4rem">Monthly Storage
+                                Report</div>
+                            <div style="font-size:.82rem;color:var(--text-3);margin-bottom:1.2rem">Temperature,
+                                humidity, and batch performance for January 2026</div>
+                            <button class="btn-sm solid" onclick="downloadReport('month')">⬇ Download PDF</button>
+                        </div>
+                    </div>
+                    <div class="section-card">
+                        <div class="card-body" style="text-align:center;padding:2rem">
+                            <div style="font-size:2.5rem;margin-bottom:.8rem">🤖</div>
+                            <div style="font-weight:800;color:var(--charcoal);margin-bottom:.4rem">AI Prediction Report
+                            </div>
+                            <div style="font-size:.82rem;color:var(--text-3);margin-bottom:1.2rem">AI spoilage risk
+                                analysis with root cause findings and recommendations</div>
+                            <button class="btn-sm solid" onclick="downloadReport('ai')">⬇ Download PDF</button>
+                        </div>
+                    </div>
+                    <div class="section-card">
+                        <div class="card-body" style="text-align:center;padding:2rem">
+                            <div style="font-size:2.5rem;margin-bottom:.8rem">🏦</div>
+                            <div style="font-weight:800;color:var(--charcoal);margin-bottom:.4rem">Insurance Report
+                            </div>
+                            <div style="font-size:.82rem;color:var(--text-3);margin-bottom:1.2rem">Regulatory-grade
+                                report with sensor logs and AI analysis for insurance claims</div>
+                            <button class="btn-sm solid" onclick="downloadReport('insurance')">⬇ Download PDF</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div><!-- /page-content -->
+    </main>
+
+    <!-- Add Crop Modal -->
+    <div class="modal-overlay" id="addCropModal" style="display:none"
+        onclick="if(event.target===this)this.style.display='none'">
+        <div class="modal-box">
+            <h2 class="modal-title">Add Crop Batch</h2>
+            <p style="font-size:.82rem;color:var(--text-3);margin-bottom:1.5rem">Enter batch details to register in the
+                FEFO system</p>
+            <div style="display:grid;gap:.9rem">
+                <div class="form-group" style="margin-bottom:0">
+                    <label style="font-size:.82rem;font-weight:600;color:var(--text-2)">Crop Type</label>
+                    <select id="cropType" class="role-select"
+                        style="border:1.5px solid rgba(0,0,0,.1);margin-top:.3rem">
+                        <option>Potato</option>
+                        <option>Tomato</option>
+                        <option>Onion</option>
+                        <option>Carrot</option>
+                        <option>Cabbage</option>
+                        <option>Apple</option>
+                        <option>Grapes</option>
+                        <option>Orange</option>
+                    </select>
+                </div>
+                <div class="form-group" style="margin-bottom:0">
+                    <label style="font-size:.82rem;font-weight:600;color:var(--text-2)">Quantity (kg)</label>
+                    <input id="cropQty" type="number" placeholder="500"
+                        style="padding:.7rem;border-radius:9px;border:1.5px solid rgba(0,0,0,.1);width:100%;font-family:'Inter',sans-serif;font-size:.9rem;outline:none;margin-top:.3rem">
+                </div>
+                <div class="form-group" style="margin-bottom:0">
+                    <label style="font-size:.82rem;font-weight:600;color:var(--text-2)">Cost (₹ per kg)</label>
+                    <input id="cropCost" type="number" placeholder="25"
+                        style="padding:.7rem;border-radius:9px;border:1.5px solid rgba(0,0,0,.1);width:100%;font-family:'Inter',sans-serif;font-size:.9rem;outline:none;margin-top:.3rem">
+                </div>
+                <div class="form-group" style="margin-bottom:0">
+                    <label style="font-size:.82rem;font-weight:600;color:var(--text-2)">Storage Unit</label>
+                    <select id="cropUnit" class="role-select"
+                        style="border:1.5px solid rgba(0,0,0,.1);margin-top:.3rem">
+                        <option>Unit 1</option>
+                        <option>Unit 2</option>
+                        <option>Unit 3</option>
+                    </select>
+                </div>
+            </div>
+            <div style="display:flex;gap:.6rem;margin-top:1.5rem">
+                <button onclick="document.getElementById('addCropModal').style.display='none'"
+                    style="flex:1;padding:.8rem;border-radius:10px;border:1.5px solid rgba(0,0,0,.1);background:#fff;cursor:pointer;font-family:'Inter',sans-serif;font-weight:600">Cancel</button>
+                <button onclick="addCrop()"
+                    style="flex:2;padding:.8rem;border-radius:10px;background:var(--green);color:#fff;border:none;cursor:pointer;font-family:'Inter',sans-serif;font-weight:700">Add
+                    Batch</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/transitions.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/dashboard-farmer.js"></script>
+</body>
+
+</html>

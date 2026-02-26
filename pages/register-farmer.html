@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Farmer Registration — CropGuardianAI</title>
+    <link rel="stylesheet" href="../css/auth.css">
+</head>
+
+<body>
+    <div class="top-bar"></div>
+    <div class="pg-overlay" id="pgOverlay"></div>
+    <div class="toast-stack" id="toastStack"></div>
+
+    <div class="auth-page">
+        <!-- Left panel -->
+        <div class="auth-left">
+            <div class="al-orb al-orb-1"></div>
+            <div class="al-orb al-orb-2"></div>
+            <div class="al-content">
+                <a href="../index.html" class="al-logo">
+                    <span class="al-logo-icon">🌿</span>
+                    <span class="al-logo-text">CropGuardian<em>AI</em></span>
+                </a>
+                <h2 class="al-title">Start Protecting<br>Your Harvest Today</h2>
+                <p class="al-sub">Join 12,000+ farmers who use AI to prevent spoilage and maximize profits from cold
+                    storage.</p>
+                <div class="al-features">
+                    <div class="al-feat"><span class="al-feat-icon">🌡️</span>Real-time temperature & humidity
+                        monitoring</div>
+                    <div class="al-feat"><span class="al-feat-icon">🤖</span>AI spoilage predictions up to 7 days in
+                        advance</div>
+                    <div class="al-feat"><span class="al-feat-icon">📱</span>SMS & WhatsApp alerts in Telugu & English
+                    </div>
+                    <div class="al-feat"><span class="al-feat-icon">📊</span>Storage health scores & crop batch tracking
+                    </div>
+                    <div class="al-feat"><span class="al-feat-icon">🔒</span>Bank-level security with JWT authentication
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right panel -->
+        <div class="auth-right">
+            <div class="auth-box">
+                <a class="back-link" onclick="go('register-select.html')">← Back to role selection</a>
+
+                <!-- Step indicator -->
+                <div class="step-dots">
+                    <div class="step-dot active" id="dot1"></div>
+                    <div class="step-dot" id="dot2"></div>
+                </div>
+
+                <!-- Step 1 -->
+                <div id="step1">
+                    <h1 class="auth-box-title">Create Account</h1>
+                    <p class="auth-box-sub">Register as a Farmer — <a onclick="go('login.html')"
+                            style="cursor:pointer">already have an account?</a></p>
+
+                    <div class="form-group">
+                        <label class="form-label">Full Name *</label>
+                        <input class="form-input" id="fullName" type="text" placeholder="Ravi Shankar"
+                            autocomplete="name">
+                        <span class="field-error" id="fnErr">Please enter your full name</span>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Phone Number *</label>
+                        <div class="phone-group">
+                            <select class="flag-code">
+                                <option value="+91">🇮🇳 +91</option>
+                                <option value="+1">🇺🇸 +1</option>
+                            </select>
+                            <input class="form-input" id="phone" type="tel" placeholder="9876543210"
+                                style="flex:1;min-width:0">
+                        </div>
+                        <span class="field-error" id="phErr">Enter valid phone number</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Email Address *</label>
+                        <input class="form-input" id="email" type="email" placeholder="ravi@example.com"
+                            autocomplete="email">
+                        <span class="field-error" id="emlErr">Enter a valid email address</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Storage Unit / Village</label>
+                        <input class="form-input" id="storageUnit" type="text"
+                            placeholder="Tadepalligudam Cold Storage Unit 1">
+                    </div>
+
+                    <button class="btn-submit" onclick="goStep2()">Continue →</button>
+                </div>
+
+                <!-- Step 2 -->
+                <div id="step2" style="display:none">
+                    <h1 class="auth-box-title">Secure Your Account</h1>
+                    <p class="auth-box-sub">Create a strong password to protect your data</p>
+
+                    <div class="form-group">
+                        <label class="form-label">Password *</label>
+                        <div class="input-wrap">
+                            <input class="form-input" id="password" type="password" placeholder="Min. 8 characters"
+                                autocomplete="new-password">
+                            <button class="input-icon" onclick="togglePw('password','eyeIcon1')"
+                                id="eyeIcon1">👁</button>
+                        </div>
+                        <div class="pw-strength">
+                            <div class="pw-bar">
+                                <div class="pw-fill" id="pwFill"></div>
+                            </div>
+                            <div class="pw-label" id="pwLabel">Enter password</div>
+                        </div>
+                        <span class="field-error" id="pwErr">Password must be at least 8 characters</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Confirm Password *</label>
+                        <div class="input-wrap">
+                            <input class="form-input" id="confirmPw" type="password" placeholder="Re-enter password"
+                                autocomplete="new-password">
+                            <button class="input-icon" onclick="togglePw('confirmPw','eyeIcon2')"
+                                id="eyeIcon2">👁</button>
+                        </div>
+                        <span class="field-error" id="cpErr">Passwords do not match</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Preferred Language</label>
+                        <select class="role-select" id="prefLang">
+                            <option value="en">English</option>
+                            <option value="te">తెలుగు (Telugu)</option>
+                            <option value="hi">हिंदी (Hindi)</option>
+                        </select>
+                    </div>
+
+                    <div class="check-group">
+                        <input type="checkbox" id="terms">
+                        <label for="terms">I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy
+                                Policy</a>. I consent to receive SMS/WhatsApp alerts.</label>
+                    </div>
+
+                    <div style="display:flex;gap:.6rem;margin-top:1rem">
+                        <button class="btn-outline" style="width:auto;padding:.9rem 1.5rem" onclick="goStep1()">←
+                            Back</button>
+                        <button class="btn-submit" onclick="submitRegister()" id="submitBtn">Create Account</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/transitions.js"></script>
+    <script src="../js/auth.js"></script>
+    <script>
+        function goStep2() {
+            const fn = document.getElementById('fullName').value.trim();
+            const ph = document.getElementById('phone').value.trim();
+            const em = document.getElementById('email').value.trim();
+            let valid = true;
+            if (!fn) { showErr('fnErr', true); document.getElementById('fullName').classList.add('error'); valid = false; } else { showErr('fnErr', false); document.getElementById('fullName').classList.remove('error'); }
+            if (!ph || !/^\d{10}$/.test(ph)) { showErr('phErr', true); document.getElementById('phone').classList.add('error'); valid = false; } else { showErr('phErr', false); document.getElementById('phone').classList.remove('error'); }
+            if (!em || !/\S+@\S+\.\S+/.test(em)) { showErr('emlErr', true); document.getElementById('email').classList.add('error'); valid = false; } else { showErr('emlErr', false); document.getElementById('email').classList.remove('error'); }
+            if (!valid) return;
+            document.getElementById('step1').style.display = 'none';
+            document.getElementById('step2').style.display = 'block';
+            document.getElementById('dot1').className = 'step-dot done';
+            document.getElementById('dot2').className = 'step-dot active';
+        }
+        function goStep1() {
+            document.getElementById('step2').style.display = 'none';
+            document.getElementById('step1').style.display = 'block';
+            document.getElementById('dot1').className = 'step-dot active';
+            document.getElementById('dot2').className = 'step-dot';
+        }
+        function submitRegister() {
+            const pw = document.getElementById('password').value;
+            const cp = document.getElementById('confirmPw').value;
+            const tc = document.getElementById('terms').checked;
+            let valid = true;
+            if (!pw || pw.length < 8) { showErr('pwErr', true); valid = false; } else { showErr('pwErr', false); }
+            if (pw !== cp) { showErr('cpErr', true); valid = false; } else { showErr('cpErr', false); }
+            if (!tc) { showToast('warn', '⚠ Please accept the Terms of Service to continue.'); valid = false; }
+            if (!valid) return;
+
+            const btn = document.getElementById('submitBtn');
+            btn.disabled = true; btn.innerHTML = '<span class="spinner"></span> Creating Account...';
+
+            // Simulate API call — store in localStorage as demo
+            const userData = {
+                fullName: document.getElementById('fullName').value.trim(),
+                email: document.getElementById('email').value.trim(),
+                phone: document.getElementById('phone').value.trim(),
+                role: 'farmer',
+                storageUnit: document.getElementById('storageUnit').value.trim() || 'Tadepalligudam Cold Storage Unit 1',
+                prefLang: document.getElementById('prefLang').value,
+                token: 'demo_jwt_' + Date.now()
+            };
+            localStorage.setItem('cgUser', JSON.stringify(userData));
+
+            setTimeout(() => {
+                if (typeof playAccountCreated === 'function') {
+                    playAccountCreated(userData.fullName, 'farmer', '../dashboards/farmer-dashboard.html');
+                } else {
+                    showToast('success', '✓ Account created successfully! Welcome to CropGuardianAI.');
+                    setTimeout(() => go('../dashboards/farmer-dashboard.html'), 1200);
+                }
+            }, 1800);
+        }
+
+        // Password strength
+        document.getElementById('password')?.addEventListener('input', function () {
+            const pw = this.value;
+            const fill = document.getElementById('pwFill');
+            const label = document.getElementById('pwLabel');
+            let strength = 0;
+            if (pw.length >= 8) strength++;
+            if (/[A-Z]/.test(pw)) strength++;
+            if (/[0-9]/.test(pw)) strength++;
+            if (/[^A-Za-z0-9]/.test(pw)) strength++;
+            const colors = ['#ef4444', '#f97316', '#eab308', '#22c55e'];
+            const labels = ['Weak', 'Fair', 'Good', 'Strong'];
+            fill.style.width = (strength * 25) + '%';
+            fill.style.background = colors[Math.max(strength - 1, 0)];
+            label.textContent = pw.length ? labels[Math.max(strength - 1, 0)] : 'Enter password';
+        });
+    </script>
+</body>
+
+</html>

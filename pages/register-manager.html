@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manager Registration — CropGuardianAI</title>
+    <link rel="stylesheet" href="../css/auth.css">
+</head>
+
+<body>
+    <div class="top-bar"></div>
+    <div class="pg-overlay" id="pgOverlay"></div>
+    <div class="toast-stack" id="toastStack"></div>
+
+    <div class="auth-page">
+        <div class="auth-left">
+            <div class="al-orb al-orb-1"
+                style="background:radial-gradient(circle,rgba(139,92,246,.25),transparent 70%)"></div>
+            <div class="al-orb al-orb-2"></div>
+            <div class="al-content">
+                <a href="../index.html" class="al-logo">
+                    <span class="al-logo-icon">🌿</span>
+                    <span class="al-logo-text">CropGuardian<em>AI</em></span>
+                </a>
+                <h2 class="al-title">Full Command<br>Center Access</h2>
+                <p class="al-sub">Manager accounts unlock the complete operations suite for your cold storage
+                    facilities.</p>
+                <div class="al-features">
+                    <div class="al-feat"><span class="al-feat-icon">📊</span>Executive analytics & KPI dashboards</div>
+                    <div class="al-feat"><span class="al-feat-icon">🔬</span>Digital twin simulation system</div>
+                    <div class="al-feat"><span class="al-feat-icon">👥</span>Employee management & assignment</div>
+                    <div class="al-feat"><span class="al-feat-icon">📄</span>PDF report generation for insurance</div>
+                    <div class="al-feat"><span class="al-feat-icon">⚡</span>Energy optimization recommendations</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="auth-right">
+            <div class="auth-box">
+                <a class="back-link" onclick="go('register-select.html')">← Back to role selection</a>
+                <h1 class="auth-box-title">Manager Registration</h1>
+                <p class="auth-box-sub">Register with your admin authorization code — <a onclick="go('login.html')"
+                        style="cursor:pointer">already registered?</a></p>
+
+                <div class="form-group">
+                    <label class="form-label">Full Name *</label>
+                    <input class="form-input" id="fullName" type="text" placeholder="Sujata Rao">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Phone Number *</label>
+                    <div class="phone-group">
+                        <select class="flag-code">
+                            <option>🇮🇳 +91</option>
+                        </select>
+                        <input class="form-input" id="phone" type="tel" placeholder="9876543210"
+                            style="flex:1;min-width:0">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Email Address *</label>
+                    <input class="form-input" id="email" type="email" placeholder="sujata@company.com">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Admin Authorization Code *
+                        <span style="font-size:.72rem;color:var(--text-3);font-weight:400"> (contact system
+                            admin)</span>
+                    </label>
+                    <input class="form-input" id="adminCode" type="text" placeholder="MGR-ADMIN-XXXXXXXX">
+                    <span class="field-error" id="codeErr">Invalid authorization code. Contact
+                        admin@cropguardian.ai</span>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Facility Name *</label>
+                    <input class="form-input" id="facility" type="text"
+                        placeholder="Tadepalligudam Cold Storage Complex">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Password *</label>
+                        <div class="input-wrap">
+                            <input class="form-input" id="password" type="password" placeholder="Min. 8 characters">
+                            <button class="input-icon" onclick="togglePw('password')">👁</button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Confirm Password *</label>
+                        <div class="input-wrap">
+                            <input class="form-input" id="confirmPw" type="password" placeholder="Re-enter">
+                            <button class="input-icon" onclick="togglePw('confirmPw')">👁</button>
+                        </div>
+                    </div>
+                </div>
+                <span class="field-error" id="cpErr">Passwords do not match</span>
+
+                <div class="check-group" style="margin-top:.5rem">
+                    <input type="checkbox" id="terms">
+                    <label for="terms">I agree to the <a href="#">Terms of Service</a>, <a href="#">Privacy Policy</a>,
+                        and manager-level data access responsibilities.</label>
+                </div>
+
+                <button class="btn-submit" onclick="submitManager()" id="submitBtn" style="margin-top:1.2rem">Create
+                    Manager Account</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/transitions.js"></script>
+    <script src="../js/auth.js"></script>
+    <script>
+        function submitManager() {
+            const fn = document.getElementById('fullName').value.trim();
+            const em = document.getElementById('email').value.trim();
+            const pw = document.getElementById('password').value;
+            const cp = document.getElementById('confirmPw').value;
+            const cod = document.getElementById('adminCode').value.trim();
+            const tc = document.getElementById('terms').checked;
+
+            if (!fn || !em || !pw || !cod) { showToast('error', '✗ Please fill all required fields.'); return; }
+            if (pw !== cp) { showErr('cpErr', true); return; } else { showErr('cpErr', false); }
+            if (!cod.toUpperCase().startsWith('MGR')) { showErr('codeErr', true); return; } else { showErr('codeErr', false); }
+            if (!tc) { showToast('warn', '⚠ Please accept the Terms of Service.'); return; }
+
+            const btn = document.getElementById('submitBtn');
+            btn.disabled = true; btn.innerHTML = '<span class="spinner"></span> Creating Account...';
+
+            const userData = {
+                fullName: fn, email: em, role: 'manager',
+                facility: document.getElementById('facility').value.trim() || 'Tadepalligudam Cold Storage Complex',
+                employeeId: 'MGR-' + Math.random().toString(36).substring(2, 6).toUpperCase(),
+                token: 'demo_jwt_' + Date.now()
+            };
+            localStorage.setItem('cgUser', JSON.stringify(userData));
+
+            setTimeout(() => {
+                if (typeof playAccountCreated === 'function') {
+                    playAccountCreated(userData.fullName, 'manager', '../dashboards/manager-dashboard.html');
+                } else {
+                    showToast('success', '✓ Manager account created! Redirecting to dashboard...');
+                    setTimeout(() => go('../dashboards/manager-dashboard.html'), 1200);
+                }
+            }, 1800);
+        }
+    </script>
+</body>
+
+</html>

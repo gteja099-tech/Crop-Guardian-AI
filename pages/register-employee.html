@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Registration — CropGuardianAI</title>
+    <link rel="stylesheet" href="../css/auth.css">
+</head>
+
+<body>
+    <div class="top-bar"></div>
+    <div class="pg-overlay" id="pgOverlay"></div>
+    <div class="toast-stack" id="toastStack"></div>
+
+    <div class="auth-page">
+        <div class="auth-left">
+            <div class="al-orb al-orb-1"
+                style="background:radial-gradient(circle,rgba(59,130,246,.25),transparent 70%)"></div>
+            <div class="al-orb al-orb-2"></div>
+            <div class="al-content">
+                <a href="../index.html" class="al-logo">
+                    <span class="al-logo-icon">🌿</span>
+                    <span class="al-logo-text">CropGuardian<em>AI</em></span>
+                </a>
+                <h2 class="al-title">Empowering<br>Storage Teams</h2>
+                <p class="al-sub">Employee accounts require manager approval. Once approved, you'll get full operational
+                    access.</p>
+                <div class="al-features">
+                    <div class="al-feat"><span class="al-feat-icon">🎛️</span>Sensor data control & real-time monitoring
+                    </div>
+                    <div class="al-feat"><span class="al-feat-icon">📹</span>Live CCTV feeds from all storage units
+                    </div>
+                    <div class="al-feat"><span class="al-feat-icon">👨‍🌾</span>Add and manage farmer records</div>
+                    <div class="al-feat"><span class="al-feat-icon">📢</span>Trigger SMS/WhatsApp/Voice alerts</div>
+                    <div class="al-feat"><span class="al-feat-icon">✅</span>Pending manager approval before access</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="auth-right">
+            <div class="auth-box" id="regForm">
+                <a class="back-link" onclick="go('register-select.html')">← Back to role selection</a>
+                <h1 class="auth-box-title">Employee Registration</h1>
+                <p class="auth-box-sub">Register for an employee account — <a onclick="go('login.html')"
+                        style="cursor:pointer">already registered?</a></p>
+
+                <div class="form-group">
+                    <label class="form-label">Full Name *</label>
+                    <input class="form-input" id="fullName" type="text" placeholder="Venkat Reddy">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Phone Number *</label>
+                    <div class="phone-group">
+                        <select class="flag-code">
+                            <option>🇮🇳 +91</option>
+                        </select>
+                        <input class="form-input" id="phone" type="tel" placeholder="9876543210"
+                            style="flex:1;min-width:0">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Email Address *</label>
+                    <input class="form-input" id="email" type="email" placeholder="venkat@company.com">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Employee Registration Code *
+                        <span style="font-size:.72rem;color:var(--text-3);font-weight:400"> (provided by your
+                            manager)</span>
+                    </label>
+                    <input class="form-input" id="empCode" type="text" placeholder="EMP-2024-XXXXXX">
+                    <span class="field-error" id="codeErr">Invalid employee code</span>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Password *</label>
+                    <div class="input-wrap">
+                        <input class="form-input" id="password" type="password" placeholder="Min. 8 characters">
+                        <button class="input-icon" onclick="togglePw('password','e1')">👁</button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Confirm Password *</label>
+                    <div class="input-wrap">
+                        <input class="form-input" id="confirmPw" type="password" placeholder="Re-enter password">
+                        <button class="input-icon" onclick="togglePw('confirmPw','e2')">👁</button>
+                    </div>
+                    <span class="field-error" id="cpErr">Passwords do not match</span>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Assigned Storage Facility</label>
+                    <select class="role-select" id="facility">
+                        <option>Tadepalligudam Cold Storage Unit 1</option>
+                        <option>Tadepalligudam Cold Storage Unit 2</option>
+                        <option>Vijayawada Cold Storage Facility</option>
+                        <option>Guntur Central Storage Hub</option>
+                        <option>Eluru Agri Cold Chain Unit</option>
+                    </select>
+                </div>
+
+                <button class="btn-submit" onclick="submitEmployee()" id="submitBtn">Submit Registration</button>
+            </div>
+
+            <!-- Pending state -->
+            <div class="auth-box" id="pendingState" style="display:none">
+                <div class="pending-card">
+                    <div class="pending-icon">⏳</div>
+                    <div class="pending-title">Registration Submitted!</div>
+                    <div class="pending-desc">
+                        Your employee account is pending manager approval.<br><br>
+                        You'll receive an email and SMS notification once your account is approved. This usually takes
+                        1–2 business days.
+                    </div>
+                </div>
+                <div
+                    style="margin-top:1.5rem;padding:1rem;background:var(--off-white);border-radius:12px;font-size:.84rem;color:var(--text-2)">
+                    <strong>Reference ID:</strong> <span id="refId" style="color:var(--green);font-weight:700"></span>
+                </div>
+                <button class="btn-outline" onclick="go('login.html')" style="margin-top:1rem">Go to Login</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/transitions.js"></script>
+    <script src="../js/auth.js"></script>
+    <script>
+        function submitEmployee() {
+            const fn = document.getElementById('fullName').value.trim();
+            const em = document.getElementById('email').value.trim();
+            const pw = document.getElementById('password').value;
+            const cp = document.getElementById('confirmPw').value;
+            const cod = document.getElementById('empCode').value.trim();
+
+            if (!fn || !em || !pw || !cod) { showToast('error', '✗ Please fill all required fields.'); return; }
+            if (pw !== cp) { showErr('cpErr', true); return; } else { showErr('cpErr', false); }
+            // Demo: accept any code that starts with EMP
+            if (!cod.toUpperCase().startsWith('EMP')) { showErr('codeErr', true); return; } else { showErr('codeErr', false); }
+
+            const btn = document.getElementById('submitBtn');
+            btn.disabled = true; btn.innerHTML = '<span class="spinner"></span> Submitting...';
+
+            setTimeout(() => {
+                const refNum = 'CGE-' + Math.random().toString(36).substring(2, 8).toUpperCase();
+                document.getElementById('refId').textContent = refNum;
+                document.getElementById('regForm').style.display = 'none';
+                document.getElementById('pendingState').style.display = 'block';
+
+                // Brief pending-state display, then animate out
+                const fn = document.getElementById('fullName')?.value?.trim() || 'Employee';
+                setTimeout(() => {
+                    if (typeof playAccountCreated === 'function') {
+                        playAccountCreated(fn, 'employee', 'login.html');
+                    } else {
+                        showToast('success', '✓ Registration submitted! Awaiting manager approval.');
+                    }
+                }, 1800);
+            }, 1800);
+        }
+    </script>
+</body>
+
+</html>
